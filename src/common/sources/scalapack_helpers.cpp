@@ -22,24 +22,24 @@ void matrix_mul_1D_process_grid(float *A, float *B, float **C, int& rows_C_local
     // Get information about how many processes are used for program execution and number of current process
     blacs_pinfo_( &iam, &nprocs );
 
-    LOGD("(In matrix_mul_1D) iam", iam);
-    LOGD("(In matrix_mul_1D) nprocs", nprocs);
+    SCALAPACK_LOGD("(In matrix_mul_1D) iam", iam);
+    SCALAPACK_LOGD("(In matrix_mul_1D) nprocs", nprocs);
 
     // Init working 1D process grid
     blacs_get_( &i_negone, &i_zero, &ictxt );
     blacs_gridinit_( &ictxt, "R", &nprow, &npcol );
     blacs_gridinfo_( &ictxt, &nprow, &npcol, &myrow, &mycol );
 
-    LOGD("(In matrix_mul_1D) myrow", myrow);
-    LOGD("(In matrix_mul_1D) mycol", mycol);
+    SCALAPACK_LOGD("(In matrix_mul_1D) myrow", myrow);
+    SCALAPACK_LOGD("(In matrix_mul_1D) mycol", mycol);
 
     if (is_A_same_as_B) {
         // compute leading dimension of matrices
         lld_A = MAX(1, numroc_( &m, &mb_A, &myrow, &i_zero, &nprow ));
         lld_B = MAX(1, numroc_( &m, &mb_A, &myrow, &i_zero, &nprow));
 
-        LOGD("(In matrix_mul_1D) lld_A", lld_A);
-        LOGD("(In matrix_mul_1D) lld_B", lld_B);
+        SCALAPACK_LOGD("(In matrix_mul_1D) lld_A", lld_A);
+        SCALAPACK_LOGD("(In matrix_mul_1D) lld_B", lld_B);
 
         // initializing array descriptors
         descinit_( desc_A, &m, &n, &mb_A, &nb_A, &i_zero, &i_zero, &ictxt, &lld_A, &info );
@@ -52,8 +52,8 @@ void matrix_mul_1D_process_grid(float *A, float *B, float **C, int& rows_C_local
             lld_A = MAX(1, numroc_( &m, &mb_A, &myrow, &i_zero, &nprow ));
             lld_B = MAX(1, numroc_( &k, &mb_B, &myrow, &i_zero, &nprow));
 
-            LOGD("(In matrix_mul_1D) lld_A", lld_A);
-            LOGD("(In matrix_mul_1D) lld_B", lld_B);
+            SCALAPACK_LOGD("(In matrix_mul_1D) lld_A", lld_A);
+            SCALAPACK_LOGD("(In matrix_mul_1D) lld_B", lld_B);
 
             // initializing array descriptors
             descinit_( desc_A, &m, &k, &mb_A, &nb_A, &i_zero, &i_zero, &ictxt, &lld_A, &info );
@@ -64,8 +64,8 @@ void matrix_mul_1D_process_grid(float *A, float *B, float **C, int& rows_C_local
         rows_C_local = numroc_( &m, &mb_A, &myrow, &i_zero, &nprow );
         cols_C_local = numroc_( &n, &nb_B, &mycol, &i_zero, &npcol );
 
-        LOGD("(In matrix_mul_1D) rows_C_local", rows_C_local);
-        LOGD("(In matrix_mul_1D) cols_C_local", cols_C_local);
+        SCALAPACK_LOGD("(In matrix_mul_1D) rows_C_local", rows_C_local);
+        SCALAPACK_LOGD("(In matrix_mul_1D) cols_C_local", cols_C_local);
 
         // allocating memory for output matrix C
         allocate(C, rows_C_local * cols_C_local);
@@ -73,7 +73,7 @@ void matrix_mul_1D_process_grid(float *A, float *B, float **C, int& rows_C_local
         // compute leading dimension of matrix C
         lld_C = MAX(1, numroc_( &m, &mb_A, &myrow, &i_zero, &nprow ));
 
-        LOGD("(In matrix_mul_1D) lld_C", lld_C);
+        SCALAPACK_LOGD("(In matrix_mul_1D) lld_C", lld_C);
 
         // initializing array descriptors for matrix C
         descinit_( desc_C, &m, &n, &mb_A, &nb_A, &i_zero, &i_zero, &ictxt, &lld_C, &info );
@@ -89,8 +89,8 @@ void matrix_mul_1D_process_grid(float *A, float *B, float **C, int& rows_C_local
             lld_A = MAX(1, numroc_( &m, &mb_A, &myrow, &i_zero, &nprow ));
             lld_B = MAX(1, numroc_( &m, &mb_B, &myrow, &i_zero, &nprow));
 
-            LOGD("(In matrix_mul_1D) lld_A", lld_A);
-            LOGD("(In matrix_mul_1D) lld_B", lld_B);
+            SCALAPACK_LOGD("(In matrix_mul_1D) lld_A", lld_A);
+            SCALAPACK_LOGD("(In matrix_mul_1D) lld_B", lld_B);
 
             // initializing array descriptors
             descinit_( desc_A, &m, &k, &mb_A, &nb_A, &i_zero, &i_zero, &ictxt, &lld_A, &info );
@@ -101,8 +101,8 @@ void matrix_mul_1D_process_grid(float *A, float *B, float **C, int& rows_C_local
         rows_C_local = numroc_( &k, &nb_A, &myrow, &i_zero, &nprow );
         cols_C_local = numroc_( &n, &nb_B, &mycol, &i_zero, &npcol );
 
-        LOGD("(In matrix_mul_1D) rows_C_local", rows_C_local);
-        LOGD("(In matrix_mul_1D) cols_C_local", cols_C_local);
+        SCALAPACK_LOGD("(In matrix_mul_1D) rows_C_local", rows_C_local);
+        SCALAPACK_LOGD("(In matrix_mul_1D) cols_C_local", cols_C_local);
 
         // allocating memory for output matrix C
         allocate(C, rows_C_local * cols_C_local);
@@ -110,7 +110,7 @@ void matrix_mul_1D_process_grid(float *A, float *B, float **C, int& rows_C_local
         // compute leading dimension of matrix C
         lld_C = MAX(1, numroc_( &k, &nb_A, &myrow, &i_zero, &nprow ));
 
-        LOGD("(In matrix_mul_1D) lld_C", lld_C);
+        SCALAPACK_LOGD("(In matrix_mul_1D) lld_C", lld_C);
 
         // initializing array descriptors for matrix C
         descinit_( desc_C, &k, &n, &nb_A, &nb_B, &i_zero, &i_zero, &ictxt, &lld_C, &info );
@@ -125,8 +125,8 @@ void matrix_mul_1D_process_grid(float *A, float *B, float **C, int& rows_C_local
             lld_A = MAX(1, numroc_( &m, &mb_A, &myrow, &i_zero, &nprow ));
             lld_B = MAX(1, numroc_( &k, &mb_B, &myrow, &i_zero, &nprow));
 
-            LOGD("(In matrix_mul_1D) lld_A", lld_A);
-            LOGD("(In matrix_mul_1D) lld_B", lld_B);
+            SCALAPACK_LOGD("(In matrix_mul_1D) lld_A", lld_A);
+            SCALAPACK_LOGD("(In matrix_mul_1D) lld_B", lld_B);
 
             // initializing array descriptors
             descinit_( desc_A, &m, &n, &mb_A, &nb_A, &i_zero, &i_zero, &ictxt, &lld_A, &info );
@@ -137,8 +137,8 @@ void matrix_mul_1D_process_grid(float *A, float *B, float **C, int& rows_C_local
         rows_C_local = numroc_( &m, &nb_A, &myrow, &i_zero, &nprow );
         cols_C_local = numroc_( &k, &nb_B, &mycol, &i_zero, &npcol );
 
-        LOGD("(In matrix_mul_1D) rows_C_local", rows_C_local);
-        LOGD("(In matrix_mul_1D) cols_C_local", cols_C_local);
+        SCALAPACK_LOGD("(In matrix_mul_1D) rows_C_local", rows_C_local);
+        SCALAPACK_LOGD("(In matrix_mul_1D) cols_C_local", cols_C_local);
 
         // allocating memory for output matrix C
         allocate(C, rows_C_local * cols_C_local);
@@ -146,7 +146,7 @@ void matrix_mul_1D_process_grid(float *A, float *B, float **C, int& rows_C_local
         // compute leading dimension of matrix C
         lld_C = MAX(1, numroc_( &m, &nb_A, &myrow, &i_zero, &nprow ));
 
-        LOGD("(In matrix_mul_1D) lld_C", lld_C);
+        SCALAPACK_LOGD("(In matrix_mul_1D) lld_C", lld_C);
 
         // initializing array descriptors for matrix C
         descinit_( desc_C, &m, &k, &nb_A, &nb_B, &i_zero, &i_zero, &ictxt, &lld_C, &info );
@@ -161,8 +161,8 @@ void matrix_mul_1D_process_grid(float *A, float *B, float **C, int& rows_C_local
             lld_A = MAX(1, numroc_( &m, &mb_A, &myrow, &i_zero, &nprow ));
             lld_B = MAX(1, numroc_( &k, &mb_B, &myrow, &i_zero, &nprow));
 
-            LOGD("(In matrix_mul_1D) lld_A", lld_A);
-            LOGD("(In matrix_mul_1D) lld_B", lld_B);
+            SCALAPACK_LOGD("(In matrix_mul_1D) lld_A", lld_A);
+            SCALAPACK_LOGD("(In matrix_mul_1D) lld_B", lld_B);
 
             // initializing array descriptors
             descinit_( desc_A, &m, &n, &mb_A, &nb_A, &i_zero, &i_zero, &ictxt, &lld_A, &info );
@@ -173,8 +173,8 @@ void matrix_mul_1D_process_grid(float *A, float *B, float **C, int& rows_C_local
         rows_C_local = numroc_( &m, &nb_A, &myrow, &i_zero, &nprow );
         cols_C_local = numroc_( &k, &nb_B, &mycol, &i_zero, &npcol );
 
-        LOGD("(In matrix_mul_1D) rows_C_local", rows_C_local);
-        LOGD("(In matrix_mul_1D) cols_C_local", cols_C_local);
+        SCALAPACK_LOGD("(In matrix_mul_1D) rows_C_local", rows_C_local);
+        SCALAPACK_LOGD("(In matrix_mul_1D) cols_C_local", cols_C_local);
 
         // allocating memory for output matrix C
         allocate(C, rows_C_local * cols_C_local);
@@ -182,7 +182,7 @@ void matrix_mul_1D_process_grid(float *A, float *B, float **C, int& rows_C_local
         // compute leading dimension of matrix C
         lld_C = MAX(1, numroc_( &m, &nb_A, &myrow, &i_zero, &nprow ));
 
-        LOGD("(In matrix_mul_1D) lld_C", lld_C);
+        SCALAPACK_LOGD("(In matrix_mul_1D) lld_C", lld_C);
 
         // initializing array descriptors for matrix C
         descinit_( desc_C, &m, &k, &nb_A, &nb_B, &i_zero, &i_zero, &ictxt, &lld_C, &info );
@@ -215,23 +215,23 @@ void matrix_transpose(float *A, int m, int n, float **C, int& rows_C_local, int&
     // Get information about how many processes are used for program execution and number of current process
     blacs_pinfo_( &iam, &nprocs );
 
-    LOGD("(In matrix_transpose) iam", iam);
-    LOGD("(In matrix_transpose) nprocs", nprocs);
+    SCALAPACK_LOGD("(In matrix_transpose) iam", iam);
+    SCALAPACK_LOGD("(In matrix_transpose) nprocs", nprocs);
 
     // Init working 1D process grid
     blacs_get_( &i_negone, &i_zero, &ictxt );
     blacs_gridinit_( &ictxt, "R", &nprow, &npcol );
     blacs_gridinfo_( &ictxt, &nprow, &npcol, &myrow, &mycol );
 
-    LOGD("(In matrix_transpose) myrow", myrow);
-    LOGD("(In matrix_transpose) mycol", mycol);
+    SCALAPACK_LOGD("(In matrix_transpose) myrow", myrow);
+    SCALAPACK_LOGD("(In matrix_transpose) mycol", mycol);
 
     // Compute precise length of local pieces and allocate array on each process for parts of distributed vectors
     rows_C_local = numroc_( &n, &mb_C, &myrow, &i_zero, &nprow );
     cols_C_local = numroc_( &m, &nb_C, &mycol, &i_zero, &npcol );
 
-    LOGD("(In matrix_mul_1D) rows_C_local", rows_C_local);
-    LOGD("(In matrix_mul_1D) cols_C_local", cols_C_local);
+    SCALAPACK_LOGD("(In matrix_mul_1D) rows_C_local", rows_C_local);
+    SCALAPACK_LOGD("(In matrix_mul_1D) cols_C_local", cols_C_local);
 
     // allocating memory for output matrix C
     allocate(C, rows_C_local * cols_C_local);
@@ -240,8 +240,8 @@ void matrix_transpose(float *A, int m, int n, float **C, int& rows_C_local, int&
     lld_A = MAX(1, numroc_( &m, &mb_A, &myrow, &i_zero, &nprow ));
     lld_C = MAX(1, numroc_( &n, &mb_C, &myrow, &i_zero, &nprow ));
 
-    LOGD("(In matrix_transpose) lld_A", lld_A);
-    LOGD("(In matrix_transpose) lld_C", lld_C);
+    SCALAPACK_LOGD("(In matrix_transpose) lld_A", lld_A);
+    SCALAPACK_LOGD("(In matrix_transpose) lld_C", lld_C);
 
     descinit_( descA, &m, &n, &mb_A, &nb_A, &i_zero, &i_zero, &ictxt, &lld_A, &info );
     descinit_( descC, &n, &m, &mb_C, &nb_C, &i_zero, &i_zero, &ictxt, &lld_C, &info );
@@ -272,36 +272,36 @@ void singular_value_decomposition(float *A, char jobu, char jobvt, int m, int n,
     MKL_INT lwork = -1;
 
     blacs_pinfo_( &iam, &nprocs );
-    LOGD("(In singular_value_decomposition) iam", iam);
-    LOGD("(In singular_value_decomposition) nprocs", nprocs);
+    SCALAPACK_LOGD("(In singular_value_decomposition) iam", iam);
+    SCALAPACK_LOGD("(In singular_value_decomposition) nprocs", nprocs);
 
     blacs_get_( &i_negone, &i_zero, &ictxt );
     blacs_gridinit_( &ictxt, "R", &nprow, &npcol );
     blacs_gridinfo_( &ictxt, &nprow, &npcol, &myrow, &mycol );
 
-    LOGD("(In singular_value_decomposition) myrow", myrow);
-    LOGD("(In singular_value_decomposition) mycol", mycol);
+    SCALAPACK_LOGD("(In singular_value_decomposition) myrow", myrow);
+    SCALAPACK_LOGD("(In singular_value_decomposition) mycol", mycol);
 
     rows_U_local = numroc_( &m, &mb_U, &myrow, &i_zero, &nprow );
     cols_U_local = numroc_( &n, &nb_U, &mycol, &i_zero, &npcol );
 
-    LOGD("(In singular_value_decomposition) rows_U_local", rows_U_local);
-    LOGD("(In singular_value_decomposition) cols_U_local", cols_U_local);
+    SCALAPACK_LOGD("(In singular_value_decomposition) rows_U_local", rows_U_local);
+    SCALAPACK_LOGD("(In singular_value_decomposition) cols_U_local", cols_U_local);
 
     rows_Vt_local = numroc_( &n, &mb_Vt, &myrow, &i_zero, &nprow );
     cols_Vt_local = numroc_( &n, &nb_Vt, &myrow, &i_zero, &npcol );
 
-    LOGD("(In singular_value_decomposition) rows_Vt_local", rows_Vt_local);
-    LOGD("(In singular_value_decomposition) cols_Vt_local", cols_Vt_local);
+    SCALAPACK_LOGD("(In singular_value_decomposition) rows_Vt_local", rows_Vt_local);
+    SCALAPACK_LOGD("(In singular_value_decomposition) cols_Vt_local", cols_Vt_local);
 
     // compute leading dimension of matrices
     lld_A = MAX(1, numroc_( &m, &mb_A, &myrow, &i_zero, &nprow ));
     lld_U = MAX(1, numroc_( &m, &mb_U, &myrow, &i_zero, &nprow));
     lld_Vt = MAX(1, numroc_( &n, &mb_Vt, &myrow, &i_zero, &nprow));
 
-    LOGD("(In singular_value_decomposition) lld_A", lld_A);
-    LOGD("(In singular_value_decomposition) lld_U", lld_U);
-    LOGD("(In singular_value_decomposition) lld_Vt", lld_Vt);
+    SCALAPACK_LOGD("(In singular_value_decomposition) lld_A", lld_A);
+    SCALAPACK_LOGD("(In singular_value_decomposition) lld_U", lld_U);
+    SCALAPACK_LOGD("(In singular_value_decomposition) lld_Vt", lld_Vt);
 
     size_of_eigen_values = MIN(m, n);
     allocate(eigen_values, size_of_eigen_values);
@@ -320,14 +320,14 @@ void singular_value_decomposition(float *A, char jobu, char jobvt, int m, int n,
 
     psgesvd_(&jobu, &jobvt, &m, &n, A, &i_one, &i_one, descA, *eigen_values, *U, &i_one, &i_one, descU, *Vt, &i_one, &i_one, descVt, &workpt, &lwork, &info);
 
-    LOGD("workpt", workpt);
+    SCALAPACK_LOGD("workpt", workpt);
 
     lwork = (int) workpt;
     allocate(&work, lwork);
 
     psgesvd_(&jobu, &jobvt, &m, &n, A, &i_one, &i_one, descA, *eigen_values, *U, &i_one, &i_one, descU, *Vt, &i_one, &i_one, descVt, work, &lwork, &info);
 
-    LOGD("info", info);
+    SCALAPACK_LOGD("info", info);
 
     // Destroy temporary process grid
     blacs_gridexit_( &ictxt );
@@ -550,8 +550,8 @@ void matrix_mul_1D_process_grid(double *A, double *B, double **C, int& rows_C_lo
             lld_A = MAX(1, numroc_( &m, &mb_A, &myrow, &i_zero, &nprow ));
             lld_B = MAX(1, numroc_( &k, &mb_B, &myrow, &i_zero, &nprow));
 
-            LOGD("(In matrix_mul_1D) lld_A", lld_A);
-            LOGD("(In matrix_mul_1D) lld_B", lld_B);
+            SCALAPACK_LOGD("(In matrix_mul_1D) lld_A", lld_A);
+            SCALAPACK_LOGD("(In matrix_mul_1D) lld_B", lld_B);
 
             // initializing array descriptors
             descinit_( desc_A, &m, &n, &mb_A, &nb_A, &i_zero, &i_zero, &ictxt, &lld_A, &info );
@@ -562,8 +562,8 @@ void matrix_mul_1D_process_grid(double *A, double *B, double **C, int& rows_C_lo
         rows_C_local = numroc_( &m, &nb_A, &myrow, &i_zero, &nprow );
         cols_C_local = numroc_( &k, &nb_B, &mycol, &i_zero, &npcol );
 
-        LOGD("(In matrix_mul_1D) rows_C_local", rows_C_local);
-        LOGD("(In matrix_mul_1D) cols_C_local", cols_C_local);
+        SCALAPACK_LOGD("(In matrix_mul_1D) rows_C_local", rows_C_local);
+        SCALAPACK_LOGD("(In matrix_mul_1D) cols_C_local", cols_C_local);
 
         // allocating memory for output matrix C
         allocate(C, rows_C_local * cols_C_local);
@@ -571,7 +571,7 @@ void matrix_mul_1D_process_grid(double *A, double *B, double **C, int& rows_C_lo
         // compute leading dimension of matrix C
         lld_C = MAX(1, numroc_( &m, &nb_A, &myrow, &i_zero, &nprow ));
 
-        LOGD("(In matrix_mul_1D) lld_C", lld_C);
+        SCALAPACK_LOGD("(In matrix_mul_1D) lld_C", lld_C);
 
         // initializing array descriptors for matrix C
         descinit_( desc_C, &m, &k, &nb_A, &nb_B, &i_zero, &i_zero, &ictxt, &lld_C, &info );
