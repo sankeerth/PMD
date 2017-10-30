@@ -361,7 +361,7 @@ void round_off_below_machine_precision_to_zero(float *array, int length) {
 
 void round_off_below_diff_max_and_threshold_to_zero(float *array, int length, float max, float threshold) {
     for (int i = 0; i < length; i++) {
-        if ((fabs(max) - fabs(array[i])) > threshold) {
+        if (fabs(array[i])/(fabs(max)) < threshold) {
             array[i] = 0;
         }
     }

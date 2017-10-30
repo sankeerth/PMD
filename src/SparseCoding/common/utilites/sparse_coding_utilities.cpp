@@ -329,7 +329,7 @@ void SparseCoding::pseudo_inverse(float *A, float **pinvA, int& m, int& n, int& 
 
     // TODO: need to fix these parameters by proc.txt file or understand better and fix in an intelligent manner
     mb = m;
-    nb = 1; //sparse_context.num_snapshots / nprallocate(&pinvA, n * nq);ocs;
+    nb = 1;
 
     mp = numroc_( &m, &mb, &myrow, &i_zero, &nprow );
     nq = numroc_( &n, &nb, &mycol, &i_zero, &npcol );

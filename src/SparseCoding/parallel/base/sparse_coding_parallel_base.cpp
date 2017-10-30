@@ -52,8 +52,8 @@ void SparseCoding::generate_sparse_modes_parallel() {
         LOG("=============== errors ============================");
         display(errors, rows_errors_local * cols_errors_local);
 
-        error_local = sqrt(error_local/ (sparse_context.num_snapshots * sparse_context.rank_eigen_values));
         MPI_Allreduce(&error_local, &error_global, 1, MPI_FLOAT, MPI_SUM, MPI_COMM_WORLD);
+        error_global = sqrt(error_global/ (sparse_context.num_snapshots * sparse_context.rank_eigen_values));
 
         if (iteration > 5) {
             epsilon_val = fabs(prev_error - error_global);
@@ -307,10 +307,16 @@ void SparseCoding::KSVD_parallel() {
     int rows_coefficient_matrix_tranpose_local, cols_coefficient_matrix_tranpose_local;
     allocate(&sparse_context.updated_modes, sparse_context.rank_eigen_values);
 
+    for (int i = 0; i < sparse_context.snapshots_per_rank; i++) {
+        float max; int pos;
+        get_max_and_pos(&sparse_context.coefficient_matrix[i * sparse_context.num_modes], sparse_context.num_modes, &max, &pos);
+
+        round_off_below_diff_max_and_threshold_to_zero(&sparse_context.coefficient_matrix[i * sparse_context.num_modes], sparse_context.num_modes,\
+                                                        max, 1e-6);
+    }
+
     matrix_transpose(sparse_context.coefficient_matrix, sparse_context.num_modes, sparse_context.num_snapshots, &sparse_context.coefficient_matrix_transpose, rows_coefficient_matrix_tranpose_local,\
                      cols_coefficient_matrix_tranpose_local, 1, sparse_context.num_procs, sparse_context.num_modes, 1, sparse_context.num_snapshots, 1);
-
-    round_off_below_machine_precision_to_zero(sparse_context.coefficient_matrix_transpose, rows_coefficient_matrix_tranpose_local * cols_coefficient_matrix_tranpose_local);
 
     LOGR("=============== coefficient matrix transpose ============================", sparse_context.my_rank, sparse_context.master);
     display(sparse_context.coefficient_matrix_transpose, rows_coefficient_matrix_tranpose_local * cols_coefficient_matrix_tranpose_local);

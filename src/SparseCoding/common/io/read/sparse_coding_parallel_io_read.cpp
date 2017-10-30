@@ -35,11 +35,11 @@ void SparseCoding::read_pod_modes() {
 
     size_t result;
     float * buffer = NULL;
-    allocate(&sparse_context.pod_bases, 3 * sparse_context.truncated_grid_points * sparse_context.num_modes_in_my_rank);
+    allocate(&sparse_context.pod_bases, 3 * sparse_context.truncated_grid_points * sparse_context.snapshots_per_rank);
     // TODO: optimize to read directly to pod_bases than to buffer and then copy it. This will save memory
     allocate(&buffer, 3 * sparse_context.truncated_grid_points);
 
-    for (int i = 0; i < sparse_context.num_modes_in_my_rank; i++) {
+    for (int i = 0; i < sparse_context.index_of_snapshot_filenames.size(); i++) {
         string str;
         str.append(sparse_context.path_to_output_directory);
         str.append("pod_modes_bin-");
@@ -65,7 +65,7 @@ void SparseCoding::read_pod_modes() {
     }
 
     deallocate(&buffer);
-    display(sparse_context.pod_bases, 3 * sparse_context.truncated_grid_points * sparse_context.num_modes_in_my_rank);
+    display(sparse_context.pod_bases, 3 * sparse_context.truncated_grid_points * sparse_context.snapshots_per_rank);
 }
 
 void SparseCoding::read_pod_coefficients() {
@@ -96,4 +96,34 @@ void SparseCoding::read_pod_coefficients() {
 
     deallocate(&buffer);
     display(sparse_context.pod_coefficients, sparse_context.rank_eigen_values * sparse_context.snapshots_per_rank);
+}
+
+void SparseModes::read_pod_coefficients_dummy() {
+    LOGR("=========== read_pod_coefficients_dummy ===========", sparse_context.my_rank, sparse_context.master);
+
+    size_t result;
+    float * buffer = NULL;
+    allocate(&sparse_context.pod_coefficients_dummy, sparse_context.rank_eigen_values * sparse_context.snapshots_per_rank);
+    // TODO: optimize to read directly to pod_bases than to buffer and then copy it. This will save memory
+    allocate(&buffer, sparse_context.rank_eigen_values);
+
+    for (int i = 0; i < sparse_context.index_of_snapshot_filenames_dummy.size(); i++) {
+        string str;
+        str.append(sparse_context.path_to_output_directory);
+        str.append("pod_coefficients_bin-");
+        str.append(patch::to_string(sparse_context.total_num_solution_files + sparse_context.start_index_of_snapshots + (sparse_context.index_of_snapshot_filenames_dummy[i] * sparse_context.file_interval)),\
+                           1, patch::to_string(sparse_context.total_num_solution_files).length()-1);
+        str.append(".b");
+        FILE *binfile = fopen(str.c_str(), "rb");
+
+        result = fread(buffer, sizeof(float), sparse_context.rank_eigen_values, binfile);
+        for (unsigned long j = 0; j < sparse_context.rank_eigen_values; j++) {
+            sparse_context.pod_coefficients_dummy[i * sparse_context.rank_eigen_values + j] = buffer[j];
+        }
+
+        fclose(binfile);
+    }
+
+    deallocate(&buffer);
+    display(sparse_context.pod_coefficients_dummy, sparse_context.rank_eigen_values * sparse_context.snapshots_per_rank);
 }

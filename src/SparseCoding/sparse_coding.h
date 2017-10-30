@@ -43,6 +43,7 @@ class SparseContext : public Context, public MPIContext {
     unsigned long truncated_grid_points;
 
     std::vector<int> index_of_snapshot_filenames;
+    std::vector<int> index_of_snapshot_filenames_dummy;
 
     int rank_eigen_values;
     int num_bases_active;
@@ -64,6 +65,7 @@ class SparseContext : public Context, public MPIContext {
     float *coefficient_matrix = NULL;
     float *coefficient_matrix_transpose = NULL;
     float *updated_modes = NULL;
+    float *sparse_coding_rms_error = NULL;
 
     void delegate_snapshots_per_process() {
         int remainder = num_snapshots % num_procs;
@@ -75,6 +77,7 @@ class SparseContext : public Context, public MPIContext {
 
         for (int i = 0; i < snapshots_per_rank; i++) {
             index_of_snapshot_filenames.push_back(i * num_procs + my_rank);
+            index_of_snapshot_filenames_dummy.push_back((i * num_procs + my_rank + 1) % num_snapshots);
         }
 
         for (int i = 0; i < index_of_snapshot_filenames.size(); i++) {
@@ -97,6 +100,7 @@ class SparseCoding {
     void read_eigen_values();
     void read_pod_modes();
     void read_pod_coefficients();
+    void read_pod_coefficients_dummy();
 
     // preprocessing
     void initial_guess_sparse_modes();

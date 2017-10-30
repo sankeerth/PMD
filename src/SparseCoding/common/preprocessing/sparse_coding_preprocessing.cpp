@@ -25,7 +25,8 @@ void SparseCoding::initial_guess_sparse_modes() {
 
     for (int i = 0; i < sparse_context.num_modes_in_my_rank; i++) {
         for (int j = 0; j < sparse_context.rank_eigen_values; j++) {
-            sparse_context.sparse_modes[i * sparse_context.rank_eigen_values + j] = sparse_context.pod_coefficients[random[i] * sparse_context.rank_eigen_values + j];
+            sparse_context.sparse_modes[i * sparse_context.rank_eigen_values + j] = sparse_context.pod_coefficients[random[i] * sparse_context.rank_eigen_values + j] +\
+                                                                                    sparse_context.pod_coefficients_dummy[random[i] * sparse_context.rank_eigen_values + j];
         }
     }
 
@@ -54,7 +55,7 @@ void SparseCoding::initialize_eplison_convergence_value() {
 
     MPI_Allreduce(&epsilon, &sparse_context.epsilon, 1, MPI_FLOAT, MPI_SUM, MPI_COMM_WORLD);
 
-    sparse_context.epsilon = 1e-6 * sqrt(sparse_context.epsilon);
+    sparse_context.epsilon = 1e-4 * sqrt(sparse_context.epsilon);
 
-    LOGD("sparse_context.epsilon", sparse_context.epsilon);
+    LOGDR("sparse_context.epsilon", sparse_context.epsilon, sparse_context.my_rank, sparse_context.master);
 }
