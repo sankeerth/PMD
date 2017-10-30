@@ -27,6 +27,9 @@ off_t fsize(const char *filename) {
 
 void measure_time_for_function(double& start_time, string function_name, int& my_rank, int& master) {
     double end_time;
+
+    MPI_Barrier(MPI_COMM_WORLD);
+
     if (my_rank == master) {
         end_time = MPI_Wtime();
         cout << "Time taken until function " << function_name << ": " << (end_time-start_time) << endl;
