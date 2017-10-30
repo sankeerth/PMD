@@ -22,41 +22,16 @@ endif
 
 EXE = POD-$(VERSION)-$(TARGET)
 
-SRCS = ../src/main.cpp \
-	   ../src/common/sources/parser.cpp \
-	   ../src/common/sources/scalapack_helpers.cpp \
-	   ../src/common/sources/utilities.cpp \
-	   ../src/controller/sources/task.cpp \
-	   ../src/controller/sources/job.cpp \
-	   ../src/POD/pod.cpp \
-	   ../src/POD/common/base/pod_base.cpp \
-	   ../src/POD/common/io/read/pod_io_read.cpp \
-	   ../src/POD/common/io/write/pod_io_write.cpp \
-	   ../src/POD/common/preprocessing/pod_preprocessing.cpp \
-	   ../src/POD/common/postprocessing/error/pod_postprocessing_error.cpp \
-	   ../src/POD/common/postprocessing/cleanup/pod_postprocessing_cleanup.cpp \
-	   ../src/POD/common/utilities/pod_utilities.cpp \
-	   ../src/POD/PODColCyclic/io/read/pod_col_cyclic_io_read.cpp \
-	   ../src/POD/PODColCyclic/io/write/pod_col_cyclic_io_write.cpp \
-	   ../src/POD/PODColCyclic/preprocessing/pod_col_cyclic_preprocessing.cpp \
-	   ../src/POD/PODColCyclic/postprocessing/error/pod_col_cyclic_postprocessing_error.cpp \
-	   ../src/POD/PODRowCyclic/io/read/pod_row_cyclic_io_read.cpp \
-	   ../src/POD/PODRowCyclic/io/write/pod_row_cyclic_io_write.cpp \
-	   ../src/POD/PODRowCyclic/preprocessing/pod_row_cyclic_preprocessing.cpp \
-	   ../src/POD/PODRowCyclic/postprocessing/error/pod_row_cyclic_postprocessing_error.cpp \
-	   ../src/SparseCoding/sparse_coding.cpp \
-	   ../src/SparseCoding/common/io/read/sparse_coding_parallel_io_read.cpp \
-	   ../src/SparseCoding/common/preprocessing/sparse_coding_preprocessing.cpp \
-	   ../src/SparseCoding/common/postprocessing/error/sparse_coding_postprocessing_error.cpp \
-	   ../src/SparseCoding/common/postprocessing/cleanup/sparse_coding_postprocessing_cleanup.cpp \
-	   ../src/SparseCoding/common/utilites/sparse_coding_utilities.cpp \
-	   ../src/SparseCoding/parallel/base/sparse_coding_parallel_base.cpp \
+vpath %.cpp ../src ../src/common/sources ../src/controller/sources ../src/POD ../src/POD/common/base ../src/POD/common/io/read ../src/POD/common/io/write ../src/POD/common/preprocessing ../src/POD/common/postprocessing/error ../src/POD/common/postprocessing/cleanup ../src/POD/common/utilities ../src/POD/PODColCyclic/io/read ../src/POD/PODColCyclic/io/write ../src/POD/PODColCyclic/preprocessing ../src/POD/PODColCyclic/postprocessing/error ../src/POD/PODRowCyclic/io/read ../src/POD/PODRowCyclic/io/write ../src/POD/PODRowCyclic/preprocessing ../src/POD/PODRowCyclic/postprocessing/error ../src/SparseCoding ../src/SparseCoding/common/io/read ../src/SparseCoding/common/preprocessing ../src/SparseCoding/common/postprocessing/error ../src/SparseCoding/common/postprocessing/cleanup ../src/SparseCoding/common/utilites ../src/SparseCoding/parallel/base 
 
-#SUBDIRS := $(shell ls ../src/ -F | grep "\/" )
-#DIRS := $(SUBDIRS)
-#SOURCE_FILES := $(foreach d, $(DIRS), $(wildcard $(d)*.cpp) )
+src = main.cpp parser.cpp scalapack_helpers.cpp utilities.cpp task.cpp job.cpp pod.cpp pod_base.cpp pod_io_read.cpp pod_io_write.cpp pod_preprocessing.cpp pod_postprocessing_error.cpp pod_postprocessing_cleanup.cpp pod_utilities.cpp pod_col_cyclic_io_read.cpp pod_col_cyclic_io_write.cpp pod_col_cyclic_preprocessing.cpp pod_col_cyclic_postprocessing_error.cpp pod_row_cyclic_io_read.cpp pod_row_cyclic_io_write.cpp pod_row_cyclic_preprocessing.cpp pod_row_cyclic_postprocessing_error.cpp sparse_coding.cpp sparse_coding_parallel_io_read.cpp sparse_coding_preprocessing.cpp sparse_coding_postprocessing_error.cpp sparse_coding_postprocessing_cleanup.cpp sparse_coding_utilities.cpp sparse_coding_parallel_base.cpp
 
-OBJS = $(subst .cpp,.o,$(SRCS))
+OBJS = $(patsubst %.cpp, %.o, $(src))
+
+#SEARCH := $(shell ls ./ -F | grep "\/")
+#DIRS := ../src/
+#SUBDIRS := $(foreach d, $(DIRS), $(SEARCH))
+
 
 all: $(EXE)
 

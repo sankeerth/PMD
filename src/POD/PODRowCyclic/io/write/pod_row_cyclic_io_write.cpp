@@ -7,15 +7,16 @@ void POD::write_pod_modes_binary_1D_procs_along_row() {
 
     float *pod_bases_transpose = NULL;
     int rows_local_pod_bases_transpose, cols_local_pod_bases_transpose;
+    int num_pod_modes = MIN(pod_context.num_modes, pod_context.rank_eigen_values);
 
-    matrix_transpose(pod_context.pod_bases, pod_context.truncated_grid_points_in_all_dim, pod_context.num_snapshots, &pod_bases_transpose, rows_local_pod_bases_transpose,\
+    matrix_transpose(pod_context.pod_bases, pod_context.truncated_grid_points_in_all_dim, num_pod_modes, &pod_bases_transpose, rows_local_pod_bases_transpose,\
                      cols_local_pod_bases_transpose, pod_context.num_procs_along_row, pod_context.num_procs_along_col, 1, 1, 1, 1);
 
     LOG("=============== pod_coefficients_transpose ============================");
     display(pod_bases_transpose, rows_local_pod_bases_transpose * cols_local_pod_bases_transpose);
 
     // create output directory if not present
-    create_pod_modes_directory();
+    create_output_directory();
     int files_to_write = MIN(pod_context.rank_eigen_values, pod_context.num_modes);
 
     for (int i = 0; (i < pod_context.index_of_snapshot_filenames.size()) && (pod_context.index_of_snapshot_filenames[i] < files_to_write); i++) {
@@ -40,8 +41,12 @@ void POD::write_pod_modes_binary_1D_procs_along_row() {
 void POD::write_pod_coefficients_binary_1D_procs_along_row() {
     LOGR("=========== write_pod_coefficients_binary_1D_procs_along_row ===========", pod_context.my_rank, pod_context.master);
 
+    // create output directory if not present
+    create_output_directory();
+
     float *pod_coefficients_transpose = NULL;
     int rows_local_pod_coefficients_transpose, cols_local_pod_coefficients_transpose;
+    int coefficients_to_write = MIN(pod_context.num_modes, pod_context.rank_eigen_values);
 
     matrix_transpose(pod_context.pod_coefficients, pod_context.num_snapshots, pod_context.num_snapshots, &pod_coefficients_transpose, rows_local_pod_coefficients_transpose,\
                      cols_local_pod_coefficients_transpose, pod_context.num_procs_along_row, pod_context.num_procs_along_col, 1, 1, 1, 1);
@@ -59,7 +64,7 @@ void POD::write_pod_coefficients_binary_1D_procs_along_row() {
         str.append(".b");
         FILE *binfile = fopen(str.c_str(), "wb");
 
-        for (unsigned long j = 0; j < pod_context.rank_eigen_values; j++) {
+        for (unsigned long j = 0; j < coefficients_to_write; j++) {
             fwrite(&pod_coefficients_transpose[j * pod_context.snapshots_per_rank + i], sizeof(float), 1, binfile);
         }
 
@@ -73,7 +78,7 @@ void POD::write_pod_rms_error_binary_1D_procs_along_row() {
     LOGR("=========== write_pod_rms_error_binary_1D_procs_along_row ===========", pod_context.my_rank, pod_context.master);
 
     // create output directory if not present
-    create_pod_modes_directory();
+    create_output_directory();
 
     for (int i = 0; i < pod_context.num_snapshots; i++) {
         string str;

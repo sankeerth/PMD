@@ -136,7 +136,7 @@ class POD
     void create_snapshots_list();
     void distribute_snapshot_filenames();
     void make_snapshot_truncated_indices();
-    void create_pod_modes_directory();
+    void create_output_directory();
 
     // preprocessing
     void verify_grid(int imax_check, int jmax_check, int kmax_check);

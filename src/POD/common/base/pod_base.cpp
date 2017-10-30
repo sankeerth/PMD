@@ -77,12 +77,10 @@ void POD::compute_pod_modes() {
     LOGR("=========== compute_pod_modes ===========", pod_context.my_rank, pod_context.master);
 
     int rows_local_pod_bases, cols_local_pod_bases;
-
-    int m = pod_context.truncated_grid_points_in_all_dim;
-    int n = pod_context.num_snapshots;
+    int num_pod_modes = MIN(pod_context.num_modes, pod_context.rank_eigen_values);
 
     matrix_mul_1D_process_grid(pod_context.truncated_snapshots, pod_context.left_singular_vectors, &pod_context.pod_bases, rows_local_pod_bases, cols_local_pod_bases,\
-                               m, n, n, 'N', 'N', pod_context.num_procs_along_row, pod_context.num_procs_along_col, 1, 1, 1, 1, false);
+                               pod_context.truncated_grid_points_in_all_dim, pod_context.num_snapshots, num_pod_modes, 'N', 'N', pod_context.num_procs_along_row, pod_context.num_procs_along_col, 1, 1, 1, 1, false);
 
     LOG("=============== POD modes ============================");
     display(pod_context.pod_bases, rows_local_pod_bases * cols_local_pod_bases);
@@ -95,12 +93,10 @@ void POD::compute_pod_coefficients() {
     LOGR("=========== compute_pod_coefficients ===========", pod_context.my_rank, pod_context.master);
 
     int rows_local_pod_coefficients, cols_local_pod_coefficients;
-
-    int m = pod_context.truncated_grid_points_in_all_dim;
-    int n = pod_context.num_snapshots;
+    int num_coefficients_per_file = MIN(pod_context.num_modes, pod_context.rank_eigen_values);
 
     matrix_mul_1D_process_grid(pod_context.pod_bases, pod_context.truncated_snapshots, &pod_context.pod_coefficients, rows_local_pod_coefficients, cols_local_pod_coefficients,\
-                               m, n, n, 'T', 'N', pod_context.num_procs_along_row, pod_context.num_procs_along_col, 1, 1, 1, 1, false);
+                               pod_context.truncated_grid_points_in_all_dim, num_coefficients_per_file, pod_context.num_snapshots, 'T', 'N', pod_context.num_procs_along_row, pod_context.num_procs_along_col, 1, 1, 1, 1, false);
 
     LOG("=============== POD coefficients ============================");
     display(pod_context.pod_coefficients, rows_local_pod_coefficients * cols_local_pod_coefficients);

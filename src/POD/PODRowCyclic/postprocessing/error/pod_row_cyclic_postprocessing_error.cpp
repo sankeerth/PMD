@@ -1,3 +1,4 @@
+#include <math.h>
 #include "../../../../common/headers/log.h"
 #include "../../../pod.h"
 
@@ -38,6 +39,9 @@ void POD::pod_rms_error_1D_procs_along_row() {
         allocate(&pod_context.pod_rms_error, pod_context.num_snapshots);
 
         for (int i = 0; i < pod_context.num_snapshots; i++) {
+            norm_numerator_reduce_in_master[i] = sqrt(norm_numerator_reduce_in_master[i]);
+            norm_denominator_reduce_in_master[i] = sqrt(norm_denominator_reduce_in_master[i]);
+
             pod_context.pod_rms_error[i] = (100 * (float) norm_numerator_reduce_in_master[i]) / (float) norm_denominator_reduce_in_master[i];
         }
 
@@ -49,5 +53,4 @@ void POD::pod_rms_error_1D_procs_along_row() {
     deallocate(&norm_denominator);
     deallocate(&norm_numerator_reduce_in_master);
     deallocate(&norm_denominator_reduce_in_master);
-    deallocate(&pod_context.pod_reconstruction_error);
 }

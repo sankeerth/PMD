@@ -7,7 +7,7 @@ void POD::write_mean_flow_binary_1D_procs_along_col() {
     LOGR("=========== write_mean_flow_binary_1D_procs_along_col ===========", pod_context.my_rank, pod_context.master);
 
     // create output directory if not present
-    create_pod_modes_directory();
+    create_output_directory();
 
     string str;
     str.append(pod_context.path_to_output_directory);
@@ -26,7 +26,7 @@ void POD::write_pod_modes_binary_1D_procs_along_col() {
     LOGR("=========== write_pod_modes_binary_1D_procs_along_col ===========", pod_context.my_rank, pod_context.master);
 
     // create output directory if not present
-    create_pod_modes_directory();
+    create_output_directory();
     int files_to_write = MIN(pod_context.rank_eigen_values, pod_context.num_modes);
 
     for (int i = 0; (i < pod_context.index_of_snapshot_filenames.size()) && (pod_context.index_of_snapshot_filenames[i] < files_to_write); i++) {
@@ -50,7 +50,9 @@ void POD::write_pod_coefficients_binary_1D_procs_along_col() {
     LOGR("=========== write_pod_coefficients_binary_1D_procs_along_col ===========", pod_context.my_rank, pod_context.master);
 
     // create output directory if not present
-    create_pod_modes_directory();
+    create_output_directory();
+
+    int coefficients_to_write = MIN(pod_context.num_modes, pod_context.rank_eigen_values);
 
     for (int i = 0, file_num = pod_context.my_rank; i < pod_context.index_of_snapshot_filenames.size(); i++, file_num += pod_context.num_procs) {
         // TODO: May be modify the substring instead of creating a new one each time
@@ -62,7 +64,7 @@ void POD::write_pod_coefficients_binary_1D_procs_along_col() {
         str.append(".b");
         FILE *binfile = fopen(str.c_str(), "wb");
 
-        for (unsigned long j = 0; j < pod_context.rank_eigen_values; j++) {
+        for (unsigned long j = 0; j < coefficients_to_write; j++) {
             fwrite(&pod_context.pod_coefficients[i * pod_context.num_snapshots + j], sizeof(float), 1, binfile);
         }
 
@@ -74,7 +76,7 @@ void POD::write_pod_rms_error_binary_1D_procs_along_col() {
     LOGR("=========== write_pod_rms_error_binary_1D_procs_along_col ===========", pod_context.my_rank, pod_context.master);
 
     // create output directory if not present
-    create_pod_modes_directory();
+    create_output_directory();
 
     for (int i = 0; i < pod_context.index_of_snapshot_filenames.size(); i++) {
         // TODO: May be modify the substring instead of creating a new one each time
@@ -99,7 +101,7 @@ void POD::write_pod_modes_text_format_1D_procs_along_col() {
     read_mesh(pod_context.is_write_pod_modes_to_text_format);
 
     // create output directory if not present
-    create_pod_modes_directory();
+    create_output_directory();
     int files_to_write = MIN(pod_context.rank_eigen_values, pod_context.num_modes);
 
     for (int i = 0; (i < pod_context.index_of_snapshot_filenames.size()) && (pod_context.index_of_snapshot_filenames[i] < files_to_write); i++) {

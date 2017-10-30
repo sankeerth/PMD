@@ -10,9 +10,7 @@ void POD::create_snapshots_list() {
                                  pod_context.solution_prefix, pod_context.total_num_solution_files, pod_context.solution_extension);
 }
 
-void POD::create_pod_modes_directory() {
-    LOGR("=========== create_pod_modes_directory ===========", pod_context.my_rank, pod_context.master);
-
+void POD::create_output_directory() {
     create_directory(pod_context.path_to_output_directory);
 }
 

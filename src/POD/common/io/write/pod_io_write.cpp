@@ -5,7 +5,7 @@ void POD::write_eigen_values_binary() {
     LOGR("=========== write_eigen_values_binary ===========", pod_context.my_rank, pod_context.master);
 
     // create output directory if not present
-    create_pod_modes_directory();
+    create_output_directory();
 
     string str;
     str.append(pod_context.path_to_output_directory);
