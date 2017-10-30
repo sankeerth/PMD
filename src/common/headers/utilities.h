@@ -4,14 +4,8 @@
 #include <string>
 #include <sstream>
 #include <vector>
-#include "mkl.h"
-#include "mkl_scalapack.h"
-#include "mkl_blacs.h"
-#include "mkl_pblas.h"
 
 #define MACHINE_PRECISION 1e-15
-
-typedef MKL_INT MDESC[ 9 ];
 
 extern "C" {
     int numroc_(int*, int*, int*, int*, int*);

@@ -21,6 +21,8 @@ void Job::create_pod_job(Context& context, MPIContext& mpi_context) {
             Job::start_pod_reconstruct_coefficients_from_modes(context, mpi_context);
 
         default:
+            LOGR("Wrong Job provided. Please provide job '0' for PODSerial, '1' for PODParallelColCyclic, '2' for PODParallelRowCyclic and '3' for PODReconstructCoefficientsFromModes",\
+                 mpi_context.my_rank, mpi_context.master);
             break;
     }
 }
@@ -40,6 +42,8 @@ void Job::create_sparse_coding_job(Context &context, MPIContext &mpi_context) {
             break;
 
         default:
+            LOGR("Wrong Job provided. Please provide job '0' for SparseCodingSerialDenseMatrix, '1' for SparseCodingSerialSparseMatrix and '2' for SparseCodingParallelDenseMatrix",\
+                 mpi_context.my_rank, mpi_context.master);
             break;
     }
 }

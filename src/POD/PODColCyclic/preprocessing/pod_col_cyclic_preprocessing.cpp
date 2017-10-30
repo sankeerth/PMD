@@ -22,7 +22,7 @@ void POD::compute_average_1D_procs_along_col() {
 }
 
 void POD::compute_fluctuating_component_1D_procs_along_col() {
-    LOGR("=========== compute_fluctuating_component ===========", pod_context.my_rank, pod_context.master);
+    LOGR("=========== compute_fluctuating_component_1D_procs_along_col ===========", pod_context.my_rank, pod_context.master);
 
     unsigned long stride = 0;
     for (int i = 0; i < pod_context.snapshots_per_rank; i++) {
@@ -39,7 +39,7 @@ void POD::compute_fluctuating_component_1D_procs_along_col() {
 }
 
 void POD::compute_snapshot_matrix_1D_procs_along_col() {
-    LOGR("=========== compute_snapshot_matrix ===========", pod_context.my_rank, pod_context.master);
+    LOGR("=========== compute_snapshot_matrix_1D_procs_along_col ===========", pod_context.my_rank, pod_context.master);
 
     unsigned long stride = 0;
     for (int i = 0; i < pod_context.snapshots_per_rank; i++) {
@@ -55,7 +55,7 @@ void POD::compute_snapshot_matrix_1D_procs_along_col() {
 }
 
 void POD::modify_left_singular_matrix_1D_procs_along_col() {
-    LOGR("=========== modify_left_singular_matrix ===========", pod_context.my_rank, pod_context.master);
+    LOGR("=========== modify_left_singular_matrix_1D_procs_along_col ===========", pod_context.my_rank, pod_context.master);
 
     // divide each column of left singular matrix by sqrt(num_snapshots * eigen_value(i))
     // This is need to compute pod_bases, however, since pod_bases is huge and of the same size of truncated snapshots
