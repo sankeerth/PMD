@@ -73,24 +73,3 @@ void POD::write_pod_coefficients_binary_1D_procs_along_row() {
 
     deallocate(&pod_coefficients_transpose);
 }
-
-void POD::write_pod_rms_error_binary_1D_procs_along_row() {
-    LOGR("=========== write_pod_rms_error_binary_1D_procs_along_row ===========", pod_context.my_rank, pod_context.master);
-
-    // create output directory if not present
-    create_output_directory();
-
-    for (int i = 0; i < pod_context.num_snapshots; i++) {
-        string str;
-        str.append(pod_context.path_to_output_directory);
-        str.append("pod_rms_error_bin-");
-        str.append(patch::to_string(i));
-        str.append(".b");
-
-        FILE *binfile = fopen(str.c_str(), "wb");
-
-        fwrite(&pod_context.pod_rms_error[i], sizeof(float), 1, binfile);
-
-        fclose(binfile);
-    }
-}

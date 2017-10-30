@@ -135,7 +135,7 @@ void POD::write_pod_output_files_1D_procs_along_col() {
         write_pod_coefficients_binary_1D_procs_along_col();
         measure_time_for_function(start_time, "Writing POD coefficients done", pod_context.my_rank, pod_context.master);
 
-        write_pod_rms_error_binary_1D_procs_along_col();
+        write_pod_rms_error_binary();
         measure_time_for_function(start_time, "Writing POD RMS error done", pod_context.my_rank, pod_context.master);
     }
 
@@ -150,9 +150,7 @@ void POD::write_pod_output_files_1D_procs_along_row() {
         write_pod_coefficients_binary_1D_procs_along_row();
         measure_time_for_function(start_time, "Writing POD coefficients done", pod_context.my_rank, pod_context.master);
 
-        if (pod_context.my_rank == pod_context.master) {
-            write_pod_rms_error_binary_1D_procs_along_row();
-        }
+        write_pod_rms_error_binary();
         measure_time_for_function(start_time, "Writing POD RMS error done", pod_context.my_rank, pod_context.master);
     }
 
