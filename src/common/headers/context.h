@@ -7,6 +7,7 @@ class Context {
   public:
     int task;
     int job;
+    bool is_data_transposed_in_POD_1D_col_cyclic;
     int num_snapshots;
     int num_modes;
     int dimensions;
@@ -35,6 +36,7 @@ class Context {
     Context(const Context& context)
         : task(context.task)
         , job(context.job)
+        , is_data_transposed_in_POD_1D_col_cyclic(context.is_data_transposed_in_POD_1D_col_cyclic)
         , num_snapshots(context.num_snapshots)
         , num_modes(context.num_modes)
         , dimensions(context.dimensions)

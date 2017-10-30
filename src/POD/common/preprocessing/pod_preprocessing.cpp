@@ -1,4 +1,5 @@
 #include "../../../common/headers/log.h"
+#include "../../../common/headers/scalapack_helpers.h"
 #include "../../pod.h"
 
 void POD::verify_grid(int imax_check, int jmax_check, int kmax_check) {
@@ -256,4 +257,18 @@ void POD::distribute_truncated_vol_grid() {
     }
 
     MPI_Bcast(pod_context.truncated_vol_grid, pod_context.truncated_grid_points, MPI_FLOAT, pod_context.master, MPI_COMM_WORLD);
+}
+
+void POD::transpose_truncated_snapshots() {
+   LOGR("=========== transpose_truncated_snapshots ===========", pod_context.my_rank, pod_context.master);
+
+    int rows_local_truncated_snapshots_transpose, cols_local_truncated_snapshots_transpose;
+
+    matrix_transpose(pod_context.truncated_snapshots, pod_context.truncated_grid_points_in_all_dim, pod_context.num_snapshots, &pod_context.truncated_snapshots_transpose,\
+                     rows_local_truncated_snapshots_transpose, cols_local_truncated_snapshots_transpose, pod_context.num_procs_along_row, pod_context.num_procs_along_col, 1, 1, 1, 1);
+
+    LOG("=============== truncated_snapshots_transpose ============================");
+    display(pod_context.truncated_snapshots_transpose, rows_local_truncated_snapshots_transpose * cols_local_truncated_snapshots_transpose);
+
+    deallocate(&pod_context.truncated_snapshots);
 }

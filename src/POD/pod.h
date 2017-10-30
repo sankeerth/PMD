@@ -72,13 +72,16 @@ class PODContext : public Context, public MPIContext {
     int *truncated_snapshot_indices = NULL;
     float **snapshots = NULL;
     float *truncated_snapshots = NULL;
+    float *truncated_snapshots_transpose = NULL;
     float *average = NULL;
     float *covariance_matrix = NULL;
     float *eigen_values = NULL;
     float *left_singular_vectors = NULL;
     float *pod_bases = NULL;
+    float *pod_bases_transpose = NULL;
     float *pod_coefficients = NULL;
     float *pod_reconstruction_error = NULL;
+    float *pod_reconstructed_snapshots_transpose = NULL;
     float *pod_rms_error = NULL;
 
     int snapshots_per_rank;
@@ -147,6 +150,7 @@ class POD
     void grid_metrics();
     void compute_mesh_volume();
     void distribute_truncated_vol_grid();
+    void transpose_truncated_snapshots();
 
     // base
     void compute_covariance_matrix();
@@ -191,6 +195,7 @@ class POD
 
     // postprocessing error
     void pod_rms_error_1D_procs_along_col();
+    void pod_rms_error_1D_procs_along_col_data_transposed();
 
     /* PODRowCyclic */
 

@@ -8,11 +8,13 @@ void POD::compute_covariance_matrix() {
 
     int rows_local_covariance_matrix, cols_local_covariance_matrix;
 
-    int m = pod_context.truncated_grid_points_in_all_dim;
-    int n = pod_context.num_snapshots;
-
-    matrix_mul_1D_process_grid(pod_context.truncated_snapshots, pod_context.truncated_snapshots, &pod_context.covariance_matrix, rows_local_covariance_matrix, cols_local_covariance_matrix,\
-                               m, n, n, 'T', 'N', pod_context.num_procs_along_row, pod_context.num_procs_along_col, 1, 1, 1, 1, true);
+    if (pod_context.is_data_transposed_in_POD_1D_col_cyclic) {
+        matrix_mul_1D_process_grid(pod_context.truncated_snapshots_transpose, pod_context.truncated_snapshots_transpose, &pod_context.covariance_matrix, rows_local_covariance_matrix, cols_local_covariance_matrix,\
+                                   pod_context.num_snapshots, pod_context.num_snapshots, pod_context.truncated_grid_points_in_all_dim, 'N', 'T', pod_context.num_procs_along_row, pod_context.num_procs_along_col, 1, 1, 1, 1, true);
+    } else {
+        matrix_mul_1D_process_grid(pod_context.truncated_snapshots, pod_context.truncated_snapshots, &pod_context.covariance_matrix, rows_local_covariance_matrix, cols_local_covariance_matrix,\
+                               pod_context.truncated_grid_points_in_all_dim, pod_context.num_snapshots, pod_context.num_snapshots, 'T', 'N', pod_context.num_procs_along_row, pod_context.num_procs_along_col, 1, 1, 1, 1, true);
+    }
 
     // divide the covariance matrix by number of snapshots
     for (int i = 0; i < rows_local_covariance_matrix * cols_local_covariance_matrix; i++) {
@@ -79,11 +81,19 @@ void POD::compute_pod_modes() {
     int rows_local_pod_bases, cols_local_pod_bases;
     int num_pod_modes = MIN(pod_context.num_modes, pod_context.rank_eigen_values);
 
-    matrix_mul_1D_process_grid(pod_context.truncated_snapshots, pod_context.left_singular_vectors, &pod_context.pod_bases, rows_local_pod_bases, cols_local_pod_bases,\
-                               pod_context.truncated_grid_points_in_all_dim, pod_context.num_snapshots, num_pod_modes, 'N', 'N', pod_context.num_procs_along_row, pod_context.num_procs_along_col, 1, 1, 1, 1, false);
+    if (pod_context.is_data_transposed_in_POD_1D_col_cyclic) {
+        matrix_mul_1D_process_grid(pod_context.left_singular_vectors, pod_context.truncated_snapshots_transpose, &pod_context.pod_bases_transpose, rows_local_pod_bases, cols_local_pod_bases,\
+                                   pod_context.num_snapshots, num_pod_modes, pod_context.truncated_grid_points_in_all_dim, 'T', 'N', pod_context.num_procs_along_row, pod_context.num_procs_along_col, 1, 1, 1, 1, false);
 
-    LOG("=============== POD modes ============================");
-    display(pod_context.pod_bases, rows_local_pod_bases * cols_local_pod_bases);
+        LOG("=============== POD bases ============================");
+        display(pod_context.pod_bases_transpose, rows_local_pod_bases * cols_local_pod_bases);
+    } else {
+        matrix_mul_1D_process_grid(pod_context.truncated_snapshots, pod_context.left_singular_vectors, &pod_context.pod_bases, rows_local_pod_bases, cols_local_pod_bases,\
+                                   pod_context.truncated_grid_points_in_all_dim, pod_context.num_snapshots, num_pod_modes, 'N', 'N', pod_context.num_procs_along_row, pod_context.num_procs_along_col, 1, 1, 1, 1, false);
+
+        LOG("=============== POD modes ============================");
+        display(pod_context.pod_bases, rows_local_pod_bases * cols_local_pod_bases);
+    }
 
     // freeing memory right after use to reduce peak memory usage
     deallocate(&pod_context.left_singular_vectors);
@@ -95,8 +105,13 @@ void POD::compute_pod_coefficients() {
     int rows_local_pod_coefficients, cols_local_pod_coefficients;
     int num_coefficients_per_file = MIN(pod_context.num_modes, pod_context.rank_eigen_values);
 
-    matrix_mul_1D_process_grid(pod_context.pod_bases, pod_context.truncated_snapshots, &pod_context.pod_coefficients, rows_local_pod_coefficients, cols_local_pod_coefficients,\
-                               pod_context.truncated_grid_points_in_all_dim, num_coefficients_per_file, pod_context.num_snapshots, 'T', 'N', pod_context.num_procs_along_row, pod_context.num_procs_along_col, 1, 1, 1, 1, false);
+    if (pod_context.is_data_transposed_in_POD_1D_col_cyclic) {
+        matrix_mul_1D_process_grid(pod_context.pod_bases_transpose, pod_context.truncated_snapshots_transpose, &pod_context.pod_coefficients, rows_local_pod_coefficients, cols_local_pod_coefficients,\
+                                   num_coefficients_per_file, pod_context.num_snapshots, pod_context.truncated_grid_points_in_all_dim, 'N', 'T', pod_context.num_procs_along_row, pod_context.num_procs_along_col, 1, 1, 1, 1, false);
+    } else {
+        matrix_mul_1D_process_grid(pod_context.pod_bases, pod_context.truncated_snapshots, &pod_context.pod_coefficients, rows_local_pod_coefficients, cols_local_pod_coefficients,\
+                                   pod_context.truncated_grid_points_in_all_dim, num_coefficients_per_file, pod_context.num_snapshots, 'T', 'N', pod_context.num_procs_along_row, pod_context.num_procs_along_col, 1, 1, 1, 1, false);
+    }
 
     LOG("=============== POD coefficients ============================");
     display(pod_context.pod_coefficients, rows_local_pod_coefficients * cols_local_pod_coefficients);

@@ -6,6 +6,7 @@ void POD::cleanup_memory() {
 
     deallocate(&pod_context.eigen_values);
     deallocate(&pod_context.pod_bases);
+    deallocate(&pod_context.pod_bases_transpose);
     deallocate(&pod_context.pod_coefficients);
     deallocate(&pod_context.pod_rms_error);
 }
@@ -15,4 +16,5 @@ void POD::deallocate_snapshots_recon_errror() {
 
     deallocate(&pod_context.truncated_snapshots);
     deallocate(&pod_context.pod_reconstruction_error);
+    deallocate(&pod_context.pod_reconstructed_snapshots_transpose);
 }

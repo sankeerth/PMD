@@ -1,6 +1,7 @@
 #include <fstream>
 #include <iomanip>
 #include "../../../../common/headers/log.h"
+#include "../../../../common/headers/scalapack_helpers.h"
 #include "../../../pod.h"
 
 void POD::write_mean_flow_binary_1D_procs_along_col() {
@@ -24,6 +25,15 @@ void POD::write_mean_flow_binary_1D_procs_along_col() {
 
 void POD::write_pod_modes_binary_1D_procs_along_col() {
     LOGR("=========== write_pod_modes_binary_1D_procs_along_col ===========", pod_context.my_rank, pod_context.master);
+
+    if (pod_context.is_data_transposed_in_POD_1D_col_cyclic) {
+        int rows_local_pod_bases, cols_local_pod_bases;
+
+        matrix_transpose(pod_context.pod_bases_transpose, pod_context.num_modes, pod_context.truncated_grid_points_in_all_dim, &pod_context.pod_bases, rows_local_pod_bases,\
+                         cols_local_pod_bases, pod_context.num_procs_along_row, pod_context.num_procs_along_col, 1, 1, 1, 1);
+
+        display(pod_context.pod_bases, rows_local_pod_bases * cols_local_pod_bases);
+    }
 
     // create output directory if not present
     create_output_directory();

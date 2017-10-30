@@ -12,6 +12,7 @@ void Parser::parse_input_file(char *input_file, Context& context) {
     if (file.is_open()) {
         file >> context.task;
         file >> context.job;
+        file >> context.is_data_transposed_in_POD_1D_col_cyclic;
         file >> context.num_snapshots;
         file >> context.num_modes;
         file >> context.dimensions;
