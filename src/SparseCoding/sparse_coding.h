@@ -102,6 +102,9 @@ class SparseCoding {
     void read_pod_coefficients();
     void read_pod_coefficients_dummy();
 
+    // io write
+    void write_sparse_coding_rms_error_binary();
+
     // preprocessing
     void initial_guess_sparse_modes();
     void initialize_eplison_convergence_value();
