@@ -49,3 +49,7 @@ void POD::make_snapshot_truncated_indices() {
     LOG("=========== truncated_snapshot_indices ===========");
     display(pod_context.truncated_snapshot_indices, pod_context.truncated_grid_points);
 }
+
+float* POD::get_truncated_snapshots() {
+    return pod_context.truncated_snapshots;
+}

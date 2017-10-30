@@ -98,7 +98,7 @@ void SparseCoding::read_pod_coefficients() {
     display(sparse_context.pod_coefficients, sparse_context.rank_eigen_values * sparse_context.snapshots_per_rank);
 }
 
-void SparseModes::read_pod_coefficients_dummy() {
+void SparseCoding::read_pod_coefficients_dummy() {
     LOGR("=========== read_pod_coefficients_dummy ===========", sparse_context.my_rank, sparse_context.master);
 
     size_t result;

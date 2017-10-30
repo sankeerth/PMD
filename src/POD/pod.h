@@ -140,6 +140,7 @@ class POD
     void distribute_snapshot_filenames();
     void make_snapshot_truncated_indices();
     void create_output_directory();
+    float* get_truncated_snapshots();
 
     // preprocessing
     void verify_grid(int imax_check, int jmax_check, int kmax_check);

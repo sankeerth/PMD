@@ -2,7 +2,7 @@
 #include "../../../../common/headers/scalapack_helpers.h"
 #include "../../../sparse_coding.h"
 
-void SparseCoding::sparse_coding_reconstruction_error() {
+void SparseCoding::sparse_coding_reconstruction_error(float *truncated_snapshots) {
     LOGR("=========== sparse_coding_reconstruction_error ===========", sparse_context.my_rank, sparse_context.master);
 
     float *pinv_pod_modes_into_sparse_modes = NULL, *pod_modes_into_sparse_modes = NULL, *pod_modes_into_sparse_modes_dup = NULL, *corrected_sparse_coeff = NULL, *recon_snapshots_from_sparse_modes = NULL;

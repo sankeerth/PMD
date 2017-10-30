@@ -31,6 +31,8 @@ void SparseCoding::initial_guess_sparse_modes() {
     }
 
     display(sparse_context.sparse_modes, sparse_context.rank_eigen_values * sparse_context.num_modes_in_my_rank);
+
+    deallocate(&sparse_context.pod_coefficients_dummy);
 }
 
 void SparseCoding::normalize_sparse_modes() {

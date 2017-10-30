@@ -59,6 +59,7 @@ class SparseContext : public Context, public MPIContext {
     float *eigen_values = NULL;
     float *pod_bases = NULL;
     float *pod_coefficients = NULL;
+    float *pod_coefficients_dummy = NULL;
     float *pod_coefficients_transpose = NULL;
     float *sparse_modes_transpose = NULL;
     float *sparse_modes = NULL;
@@ -103,6 +104,8 @@ class SparseCoding {
     void read_pod_coefficients_dummy();
 
     // io write
+    void write_sparse_modes_binary();
+    void write_sparse_coefficients_binary();
     void write_sparse_coding_rms_error_binary();
 
     // preprocessing
@@ -117,7 +120,7 @@ class SparseCoding {
     void pseudo_inverse(float *A, float **pinvA, int &m, int &n, int &rows_pinvA, int &cols_pinvA);
 
     // postprocessing error
-    void sparse_coding_reconstruction_error();
+    void sparse_coding_reconstruction_error(float *truncated_snapshots);
 
     // postprocessing cleanup
     void cleanup_memory();
@@ -131,6 +134,12 @@ class SparseCoding {
     void update_modes_KSVD_parallel(int& col);
     void replace_non_active_mode_parallel(int col, int &pos);
     void I_clear_dictionary_parallel();
+
+    /* sparse coding */
+    void sparse_coding_preprocessing();
+    void compute_sparse_coding();
+    void compute_sparse_coding_error(float *truncated_snapshots);
+    void write_sparse_coding_output_files();
 
   private:
     SparseContext sparse_context;

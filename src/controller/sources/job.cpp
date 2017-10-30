@@ -113,6 +113,7 @@ void Job::start_pod_reconstruct_coefficients_from_modes(Context &context, MPICon
     MPI_Barrier(MPI_COMM_WORLD);
     pod.write_pod_coefficients_binary_1D_procs_along_col();
     MPI_Barrier(MPI_COMM_WORLD);
+    pod.cleanup_memory();
 }
 
 void Job::start_sparse_coding_serial_dense_matrix_job(Context &context, MPIContext &mpi_context) {
@@ -131,4 +132,14 @@ void Job::start_sparse_coding_parallel_dense_matrix_job(Context &context, MPICon
     LOGR("*********** start_sparse_coding_parallel_dense_matrix_job ***********", mpi_context.my_rank, mpi_context.master);
 
     SparseCoding sparse_coding(context, mpi_context);
+    sparse_coding.sparse_coding_preprocessing();
+    sparse_coding.compute_sparse_coding();
+    if (context.compute_sparse_coding_reconstruction_error) {
+        POD pod(context, mpi_context);
+        pod.mesh_processing();
+        pod.snapshots_preprocessing_1D_procs_along_col();
+        sparse_coding.compute_sparse_coding_error(pod.get_truncated_snapshots());
+    }
+    sparse_coding.write_sparse_coding_output_files();
+    sparse_coding.cleanup_memory();
 }
