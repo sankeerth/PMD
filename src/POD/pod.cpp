@@ -142,8 +142,8 @@ void POD::write_pod_output_files_1D_procs_along_row() {
 
         if (pod_context.my_rank == pod_context.master) {
             write_pod_rms_error_binary_1D_procs_along_row();
-            measure_time_for_function(start_time, "Writing POD RMS error done", pod_context.my_rank, pod_context.master);
         }
+        measure_time_for_function(start_time, "Writing POD RMS error done", pod_context.my_rank, pod_context.master);
     }
 
     if (pod_context.is_write_pod_modes_to_binary_format) {

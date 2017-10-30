@@ -4,15 +4,18 @@
 #include "../../common/headers/context.h"
 #include "../../common/headers/mpi_context.h"
 
-typedef enum {
+enum PODJob{
     PODSerial,
-    PODParallelRowCyclic,
     PODParallelColCyclic,
-    PODReconstructCoefficientsFromModes,
+    PODParallelRowCyclic,
+    PODReconstructCoefficientsFromModes
+};
+
+enum SparseCodingJob {
     SparseCodingSerialDenseMatrix,
     SparseCodingSerialSparseMatrix,
     SparseCodingParallelDenseMatrix
-} JobType;
+};
 
 class Job {
   public:

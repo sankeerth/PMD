@@ -5,19 +5,19 @@
 
 void Job::create_pod_job(Context& context, MPIContext& mpi_context) {
     switch(context.job) {
-        case PODSerial:
+        case PODJob::PODSerial:
             Job::start_pod_serial_job(context, mpi_context);
             break;
 
-        case PODParallelColCyclic:
+        case PODJob::PODParallelColCyclic:
             Job::start_pod_parallel_col_cyclic_job(context, mpi_context);
             break;
 
-        case PODParallelRowCyclic:
+        case PODJob::PODParallelRowCyclic:
             Job::start_pod_parallel_row_cyclic_job(context, mpi_context);
             break;
 
-        case PODReconstructCoefficientsFromModes:
+        case PODJob::PODReconstructCoefficientsFromModes:
             Job::start_pod_reconstruct_coefficients_from_modes(context, mpi_context);
 
         default:
@@ -29,15 +29,15 @@ void Job::create_pod_job(Context& context, MPIContext& mpi_context) {
 
 void Job::create_sparse_coding_job(Context &context, MPIContext &mpi_context) {
     switch (context.job) {
-        case SparseCodingSerialDenseMatrix:
+        case SparseCodingJob::SparseCodingSerialDenseMatrix:
             start_sparse_coding_serial_dense_matrix_job(context, mpi_context);
             break;
 
-        case SparseCodingSerialSparseMatrix:
+        case SparseCodingJob::SparseCodingSerialSparseMatrix:
             start_sparse_coding_serial_sparse_matrix_job(context, mpi_context);
             break;
 
-        case SparseCodingParallelDenseMatrix:
+        case SparseCodingJob::SparseCodingParallelDenseMatrix:
             start_sparse_coding_parallel_dense_matrix_job(context, mpi_context);
             break;
 
