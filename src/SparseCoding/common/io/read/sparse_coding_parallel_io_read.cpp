@@ -15,12 +15,6 @@ void SparseCoding::read_eigen_values() {
     // Need to see how to propogate the value found in POD to sparse coding if run independently
     sparse_context.rank_eigen_values = num_eigen_values;
 
-    // In case we want to use only fewer values than the rank computed during POD.
-    // Essentially equal to using fewer number of rows in POD coefficients
-    if (sparse_context.is_rank_equal_to_num_modes) {
-        sparse_context.rank_eigen_values = MIN(sparse_context.rank_eigen_values, sparse_context.num_modes);
-    }
-
     LOGD("rank of snapshot matrix", sparse_context.rank_eigen_values);
 
     if (sparse_context.num_modes > sparse_context.rank_eigen_values) {

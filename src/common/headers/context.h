@@ -25,7 +25,6 @@ class Context {
     std::string solution_prefix;
     std::string solution_extension;
     std::string path_to_output_directory;
-    bool is_rank_equal_to_num_modes;
     bool compute_pod_reconstruction_error;
     bool compute_sparse_coding_reconstruction_error;
     bool is_write_pod_modes_to_text_format;
@@ -59,7 +58,6 @@ class Context {
         , solution_prefix(context.solution_prefix)
         , solution_extension(context.solution_extension)
         , path_to_output_directory(context.path_to_output_directory)
-        , is_rank_equal_to_num_modes(context.is_rank_equal_to_num_modes)
         , compute_pod_reconstruction_error(context.compute_pod_reconstruction_error)
         , compute_sparse_coding_reconstruction_error(context.compute_sparse_coding_reconstruction_error)
         , is_write_pod_modes_to_text_format(context.is_write_pod_modes_to_text_format)

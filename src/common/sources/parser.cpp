@@ -28,7 +28,6 @@ void Parser::parse_input_file(char *input_file, Context& context) {
         file >> context.solution_prefix;
         file >> context.solution_extension;
         file >> context.path_to_output_directory;
-        file >> context.is_rank_equal_to_num_modes;
         file >> context.compute_pod_reconstruction_error;
         file >> context.compute_sparse_coding_reconstruction_error;
         file >> context.is_write_pod_modes_to_text_format;
