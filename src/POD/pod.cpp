@@ -40,6 +40,11 @@ void POD::snapshots_preprocessing_1D_procs_along_col() {
 
     compute_snapshot_matrix_1D_procs_along_col();
     measure_time_for_function(start_time, "Compute snapshot matrix done", pod_context.my_rank, pod_context.master);
+
+    if (pod_context.is_data_transposed_in_POD_1D_col_cyclic) {
+        transpose_truncated_snapshots();
+        measure_time_for_function(start_time, "Transpose truncated snapshots done", pod_context.my_rank, pod_context.master);
+    }
 }
 
 void POD::snapshots_preprocessing_1D_procs_along_row() {
@@ -104,8 +109,13 @@ void POD::compute_pod_error_1D_procs_along_col() {
     pod_reconstruction_error();
     measure_time_for_function(start_time, "Compute reconstruction error done", pod_context.my_rank, pod_context.master);
 
-    pod_rms_error_1D_procs_along_col();
-    measure_time_for_function(start_time, "Compute POD RMS error done", pod_context.my_rank, pod_context.master);
+    if (pod_context.is_data_transposed_in_POD_1D_col_cyclic) {
+        pod_rms_error_1D_procs_along_col_data_transposed();
+        measure_time_for_function(start_time, "Compute POD RMS error done", pod_context.my_rank, pod_context.master);
+    } else {
+        pod_rms_error_1D_procs_along_col();
+        measure_time_for_function(start_time, "Compute POD RMS error done", pod_context.my_rank, pod_context.master);
+    }
 
     deallocate_snapshots_recon_errror();
 }
