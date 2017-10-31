@@ -18,6 +18,10 @@ void POD::compute_average_1D_procs_along_col() {
 
     MPI_Allreduce(MPI_IN_PLACE, pod_context.average, pod_context.truncated_grid_points_in_all_dim, MPI_FLOAT, MPI_SUM, MPI_COMM_WORLD);
 
+    for (unsigned long i = 0; i < pod_context.truncated_grid_points_in_all_dim; i++) {
+        pod_context.average[i] = pod_context.average[i] / pod_context.num_snapshots;
+    }
+
     display(pod_context.average, pod_context.truncated_grid_points_in_all_dim);
 }
 
@@ -28,7 +32,7 @@ void POD::compute_fluctuating_component_1D_procs_along_col() {
     for (int i = 0; i < pod_context.snapshots_per_rank; i++) {
         stride = i * pod_context.truncated_grid_points_in_all_dim;
         for (unsigned long j = 0; j < pod_context.truncated_grid_points_in_all_dim; j++) {
-            pod_context.truncated_snapshots[stride +j] = pod_context.truncated_snapshots[stride + j] - (pod_context.average[j] / pod_context.num_snapshots);
+            pod_context.truncated_snapshots[stride +j] = pod_context.truncated_snapshots[stride + j] - pod_context.average[j];
         }
         display(&pod_context.truncated_snapshots[stride], pod_context.truncated_grid_points_in_all_dim);
         NEWLINE;

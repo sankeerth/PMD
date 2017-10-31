@@ -33,6 +33,10 @@ void POD::snapshots_preprocessing_1D_procs_along_col() {
     compute_average_1D_procs_along_col();
     measure_time_for_function(start_time, "Compute average done", pod_context.my_rank, pod_context.master);
 
+    if (pod_context.my_rank == pod_context.master) {
+        write_mean_flow_binary_1D_procs_along_col();
+    }
+
     compute_fluctuating_component_1D_procs_along_col();
     measure_time_for_function(start_time, "Compute fluctuating component done", pod_context.my_rank, pod_context.master);
 
@@ -57,6 +61,8 @@ void POD::snapshots_preprocessing_1D_procs_along_row() {
 
     compute_average_1D_procs_along_row();
     measure_time_for_function(start_time, "Compute average done", pod_context.my_rank, pod_context.master);
+
+    write_mean_flow_binary_1D_procs_along_row();
 
     compute_fluctuating_component_1D_procs_along_row();
     measure_time_for_function(start_time, "Compute fluctuating component done", pod_context.my_rank, pod_context.master);
@@ -131,6 +137,10 @@ void POD::compute_pod_error_1D_procs_along_row() {
 }
 
 void POD::write_pod_output_files_1D_procs_along_col() {
+    if (pod_context.my_rank == pod_context.master) {
+        write_eigen_values_binary();
+    }
+
     if (pod_context.is_write_coefficients_and_error_to_binary_format) {
         write_pod_coefficients_binary_1D_procs_along_col();
         measure_time_for_function(start_time, "Writing POD coefficients done", pod_context.my_rank, pod_context.master);
@@ -146,6 +156,10 @@ void POD::write_pod_output_files_1D_procs_along_col() {
 }
 
 void POD::write_pod_output_files_1D_procs_along_row() {
+    if (pod_context.my_rank == pod_context.master) {
+        write_eigen_values_binary();
+    }
+
     if (pod_context.is_write_coefficients_and_error_to_binary_format) {
         write_pod_coefficients_binary_1D_procs_along_row();
         measure_time_for_function(start_time, "Writing POD coefficients done", pod_context.my_rank, pod_context.master);

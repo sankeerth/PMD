@@ -210,6 +210,7 @@ class POD
     void read_truncated_snapshots_1D_procs_along_row();
 
     // io write
+    void write_mean_flow_binary_1D_procs_along_row();
     void write_pod_modes_binary_1D_procs_along_row();
     void write_pod_coefficients_binary_1D_procs_along_row();
 

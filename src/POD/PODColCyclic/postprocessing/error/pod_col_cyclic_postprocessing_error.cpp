@@ -3,7 +3,7 @@
 #include "../../../pod.h"
 
 void POD::pod_rms_error_1D_procs_along_col() {
-    LOGR("=========== compute_average_1D_procs_along_col ===========", pod_context.my_rank, pod_context.master);
+    LOGR("=========== pod_rms_error_1D_procs_along_col ===========", pod_context.my_rank, pod_context.master);
 
     double *norm_numerator = NULL, *norm_denominator = NULL;
 

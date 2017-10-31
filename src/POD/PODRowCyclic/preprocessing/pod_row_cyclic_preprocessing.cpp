@@ -3,7 +3,7 @@
 #include "../../pod.h"
 
 void POD::compute_average_1D_procs_along_row() {
-    LOGR("=========== compute_average_1D_procs_along_col ===========", pod_context.my_rank, pod_context.master);
+    LOGR("=========== compute_average_1D_procs_along_row ===========", pod_context.my_rank, pod_context.master);
 
     allocate(&pod_context.average, pod_context.num_snapshot_points_per_proc);
     initialize(pod_context.average, pod_context.num_snapshot_points_per_proc);
@@ -14,18 +14,22 @@ void POD::compute_average_1D_procs_along_row() {
         }
     }
 
+    for (unsigned long i = 0; i < pod_context.num_snapshot_points_per_proc; i++) {
+        pod_context.average[i] = pod_context.average[i] / pod_context.num_snapshots;
+    }
+
     LOG("============ average ===========");
     display(pod_context.average, pod_context.num_snapshot_points_per_proc);
 }
 
 void POD::compute_fluctuating_component_1D_procs_along_row() {
-    LOGR("=========== compute_average_1D_procs_along_col ===========", pod_context.my_rank, pod_context.master);
+    LOGR("=========== compute_fluctuating_component_1D_procs_along_row ===========", pod_context.my_rank, pod_context.master);
 
     unsigned long stride = 0;
     for (int i = 0; i < pod_context.num_snapshots; i++) {
         stride = i * pod_context.num_snapshot_points_per_proc;
         for (unsigned long j = 0; j < pod_context.num_snapshot_points_per_proc; j++) {
-            pod_context.truncated_snapshots[stride + j] = pod_context.truncated_snapshots[stride + j] - (pod_context.average[j] / pod_context.num_snapshots);
+            pod_context.truncated_snapshots[stride + j] = pod_context.truncated_snapshots[stride + j] - pod_context.average[j];
         }
     }
 
@@ -34,7 +38,7 @@ void POD::compute_fluctuating_component_1D_procs_along_row() {
 }
 
 void POD::compute_snapshot_matrix_1D_procs_along_row() {
-    LOGR("=========== compute_average_1D_procs_along_col ===========", pod_context.my_rank, pod_context.master);
+    LOGR("=========== compute_snapshot_matrix_1D_procs_along_row ===========", pod_context.my_rank, pod_context.master);
 
     unsigned long stride = 0;
 
@@ -50,7 +54,7 @@ void POD::compute_snapshot_matrix_1D_procs_along_row() {
 }
 
 void POD::modify_left_singular_matrix_1D_procs_along_row() {
-    LOGR("=========== compute_average_1D_procs_along_col ===========", pod_context.my_rank, pod_context.master);
+    LOGR("=========== modify_left_singular_matrix_1D_procs_along_row ===========", pod_context.my_rank, pod_context.master);
 
     unsigned long stride = 0;
     float eigen_value_product_num_snapshots;

@@ -2,6 +2,35 @@
 #include "../../../../common/headers/scalapack_helpers.h"
 #include "../../../pod.h"
 
+void POD::write_mean_flow_binary_1D_procs_along_row() {
+    LOGR("=========== write_mean_flow_binary_1D_procs_along_row ===========", pod_context.my_rank, pod_context.master);
+
+    float *average_transpose = NULL;
+    int rows_local_average_transpose, cols_local_average_transpose;
+
+    matrix_transpose(pod_context.average, pod_context.truncated_grid_points_in_all_dim, 1, &average_transpose, rows_local_average_transpose, cols_local_average_transpose,\
+                     pod_context.num_procs_along_row, pod_context.num_procs_along_col, 1, 1, 1, 1);
+
+    if (pod_context.my_rank == pod_context.master) {
+        // create output directory if not present
+        create_output_directory();
+
+        string str;
+        str.append(pod_context.path_to_output_directory);
+        str.append("mean_flow.b");
+
+        FILE *binfile = fopen(str.c_str(), "wb");
+
+        for (unsigned long i = 0; i < pod_context.truncated_grid_points_in_all_dim; i++) {
+            fwrite(&average_transpose[i], sizeof(float), 1, binfile);
+        }
+
+        fclose(binfile);
+    }
+
+    deallocate(&average_transpose);
+}
+
 void POD::write_pod_modes_binary_1D_procs_along_row() {
     LOGR("=========== write_pod_modes_binary_1D_procs_along_row ===========", pod_context.my_rank, pod_context.master);
 
