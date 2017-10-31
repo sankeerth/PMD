@@ -25,5 +25,7 @@ void SparseCoding::compute_sparse_coding_error(float *truncated_snapshots) {
 void SparseCoding::write_sparse_coding_output_files() {
     write_sparse_modes_binary();
     write_sparse_coefficients_binary();
-    write_sparse_coding_rms_error_binary();
+    if (sparse_context.compute_sparse_coding_reconstruction_error) {
+        write_sparse_coding_rms_error_binary();
+    }
 }
