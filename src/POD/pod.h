@@ -24,7 +24,7 @@ class PODContext : public Context, public MPIContext {
         truncated_grid_points = nxt * nyt * nzt;
         truncated_grid_points_in_all_dim = dimensions * truncated_grid_points;
 
-        if (procs_along_row) {
+        if (task == 0 and job == 2) {
             num_procs_along_row = num_procs;
             num_procs_along_col = 1;
         } else {
