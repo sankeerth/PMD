@@ -71,9 +71,7 @@ void SparseCoding::generate_sparse_modes_parallel() {
 
     LOGD("Total iterations", iteration);
 
-    deallocate(&sparse_context.coefficient_matrix_transpose);
     deallocate(&sparse_context.sparse_modes_transpose);
-    deallocate(&sparse_context.coefficient_matrix);
     deallocate(&sparse_context.pod_coefficients_transpose);
 }
 

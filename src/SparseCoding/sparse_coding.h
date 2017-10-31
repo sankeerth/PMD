@@ -72,6 +72,14 @@ class SparseContext : public Context, public MPIContext {
         int remainder = num_snapshots % num_procs;
         snapshots_per_rank = num_snapshots / num_procs;
 
+        if (task == 0 and job == 2) {
+            num_procs_along_row = num_procs;
+            num_procs_along_col = 1;
+        } else {
+            num_procs_along_row = 1;
+            num_procs_along_col = num_procs;
+        }
+
         if (my_rank < remainder) {
             snapshots_per_rank++;
         }

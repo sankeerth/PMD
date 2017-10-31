@@ -11,7 +11,7 @@ void SparseCoding::write_sparse_modes_binary() {
     for (int i = 0; i < sparse_context.num_modes_in_my_rank; i++) {
         string str;
         str.append(sparse_context.path_to_output_directory);
-        str.append("sparse_modes_bin");
+        str.append("sparse_modes_bin-");
         str.append(patch::to_string(sparse_context.index_of_snapshot_filenames[i]));
         str.append(".b");
 
@@ -39,7 +39,7 @@ void SparseCoding::write_sparse_coefficients_binary() {
     for (int i = 0, file_num = sparse_context.my_rank; i < sparse_context.index_of_snapshot_filenames.size(); i++, file_num += sparse_context.num_procs) {
         string str;
         str.append(sparse_context.path_to_output_directory);
-        str.append("sparse_coefficients_bin");
+        str.append("sparse_coefficients_bin-");
         str.append(patch::to_string(sparse_context.total_num_solution_files + sparse_context.start_index_of_snapshots + (file_num * sparse_context.file_interval)),\
                    1, patch::to_string(sparse_context.total_num_solution_files).length()-1);
         str.append(".b");
