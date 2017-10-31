@@ -25,12 +25,6 @@ int main(int argc, char **argv) {
     Parser parser;
     parser.parse_input_file(argv[1], context);
 
-    if (!context.procs_along_row && mpi_context.num_procs > context.num_snapshots) {
-        LOGR("More procs used than num of snapshots or num of modes. Execute again with num of procs less than or equal to num of snapshots", mpi_context.my_rank, mpi_context.master);
-        MPI_Finalize();
-        exit(1);
-    }
-
     Task::create_task(context, mpi_context);
 
     MPI_Finalize();

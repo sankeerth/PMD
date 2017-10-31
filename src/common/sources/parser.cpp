@@ -16,10 +16,8 @@ void Parser::parse_input_file(char *input_file, Context& context) {
         file >> context.num_snapshots;
         file >> context.num_modes;
         file >> context.dimensions;
-        file >> context.procs_along_row;
         file >> context.imax >> context.jmax >> context.kmax;
         file >> context.it_min >>  context.it_max >>  context.jt_min >>  context.jt_max >>  context.kt_min >>  context.kt_max;
-        file >> context.sparsity;
         file >> context.total_num_solution_files;
         file >> context.file_interval;
         file >> context.start_index_of_snapshots;
@@ -33,6 +31,7 @@ void Parser::parse_input_file(char *input_file, Context& context) {
         file >> context.is_write_pod_modes_to_text_format;
         file >> context.is_write_pod_modes_to_binary_format;
         file >> context.is_write_coefficients_and_error_to_binary_format;
+        file >> context.sparsity;
         file >> context.epsilon_rank;
     }
 

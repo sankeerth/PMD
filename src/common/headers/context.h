@@ -11,12 +11,10 @@ class Context {
     int num_snapshots;
     int num_modes;
     int dimensions;
-    bool procs_along_row;
     int imax, jmax, kmax;
     int it_min, it_max;
     int jt_min, jt_max;
     int kt_min, kt_max;
-    float sparsity;
     int total_num_solution_files;
     int file_interval;
     int start_index_of_snapshots;
@@ -30,6 +28,7 @@ class Context {
     bool is_write_pod_modes_to_text_format;
     bool is_write_pod_modes_to_binary_format;
     bool is_write_coefficients_and_error_to_binary_format;
+    float sparsity;
     float epsilon_rank;
 
     Context(const Context& context)
@@ -39,7 +38,6 @@ class Context {
         , num_snapshots(context.num_snapshots)
         , num_modes(context.num_modes)
         , dimensions(context.dimensions)
-        , procs_along_row(context.procs_along_row)
         , imax(context.imax)
         , jmax(context.jmax)
         , kmax(context.kmax)
@@ -49,7 +47,6 @@ class Context {
         , jt_max(context.jt_max)
         , kt_min(context.kt_min)
         , kt_max(context.kt_max)
-        , sparsity(context.sparsity)
         , total_num_solution_files(context.total_num_solution_files)
         , file_interval(context.file_interval)
         , start_index_of_snapshots(context.start_index_of_snapshots)
@@ -63,6 +60,7 @@ class Context {
         , is_write_pod_modes_to_text_format(context.is_write_pod_modes_to_text_format)
         , is_write_pod_modes_to_binary_format(context.is_write_pod_modes_to_binary_format)
         , is_write_coefficients_and_error_to_binary_format(context.is_write_coefficients_and_error_to_binary_format)
+        , sparsity(context.sparsity)
         , epsilon_rank(context.epsilon_rank)
     { }
 
