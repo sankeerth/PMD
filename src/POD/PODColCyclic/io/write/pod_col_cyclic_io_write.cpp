@@ -75,7 +75,7 @@ void POD::write_pod_coefficients_binary_1D_procs_along_col() {
         FILE *binfile = fopen(str.c_str(), "wb");
 
         for (unsigned long j = 0; j < coefficients_to_write; j++) {
-            fwrite(&pod_context.pod_coefficients[i * pod_context.num_snapshots + j], sizeof(float), 1, binfile);
+            fwrite(&pod_context.pod_coefficients[i * coefficients_to_write + j], sizeof(float), 1, binfile);
         }
 
         fclose(binfile);
