@@ -58,7 +58,7 @@ void POD::write_pod_modes_binary_1D_procs_along_row() {
         FILE *binfile = fopen(str.c_str(), "wb");
 
         for (unsigned long j = 0; j < pod_context.truncated_grid_points_in_all_dim; j++) {
-            fwrite(&pod_bases_transpose[j * pod_context.snapshots_per_rank + i], sizeof(float), 1, binfile);
+            fwrite(&pod_bases_transpose[j * rows_local_pod_bases_transpose + i], sizeof(float), 1, binfile);
         }
 
         fclose(binfile);
@@ -77,7 +77,7 @@ void POD::write_pod_coefficients_binary_1D_procs_along_row() {
     int rows_local_pod_coefficients_transpose, cols_local_pod_coefficients_transpose;
     int coefficients_to_write = MIN(pod_context.num_modes, pod_context.rank_eigen_values);
 
-    matrix_transpose(pod_context.pod_coefficients, pod_context.num_snapshots, pod_context.num_snapshots, &pod_coefficients_transpose, rows_local_pod_coefficients_transpose,\
+    matrix_transpose(pod_context.pod_coefficients, coefficients_to_write, pod_context.num_snapshots, &pod_coefficients_transpose, rows_local_pod_coefficients_transpose,\
                      cols_local_pod_coefficients_transpose, pod_context.num_procs_along_row, pod_context.num_procs_along_col, 1, 1, 1, 1);
 
     LOG("=============== pod_coefficients_transpose ============================");
@@ -94,7 +94,7 @@ void POD::write_pod_coefficients_binary_1D_procs_along_row() {
         FILE *binfile = fopen(str.c_str(), "wb");
 
         for (unsigned long j = 0; j < coefficients_to_write; j++) {
-            fwrite(&pod_coefficients_transpose[j * pod_context.snapshots_per_rank + i], sizeof(float), 1, binfile);
+            fwrite(&pod_coefficients_transpose[j * rows_local_pod_coefficients_transpose + i], sizeof(float), 1, binfile);
         }
 
         fclose(binfile);
