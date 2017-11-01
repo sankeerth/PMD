@@ -2,7 +2,7 @@
 #include "../../../pod.h"
 
 void POD::read_truncated_snapshots_1D_procs_along_col() {
-    LOGR("=========== compute_average_1D_procs_along_col ===========", pod_context.my_rank, pod_context.master);
+    LOGR("=========== read_truncated_snapshots_1D_procs_along_col ===========", pod_context.my_rank, pod_context.master);
 
     FILE *binfile;
     int details = 4;

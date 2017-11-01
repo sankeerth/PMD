@@ -166,7 +166,6 @@ class POD
 
     // io write
     void write_eigen_values_binary();
-    void write_pod_rms_error_binary();
 
     // postprocessing error
     void pod_reconstruction_error();
@@ -193,6 +192,8 @@ class POD
     void write_pod_modes_binary_1D_procs_along_col();
     void write_pod_coefficients_binary_1D_procs_along_col();
     void write_pod_modes_text_format_1D_procs_along_col();
+    void write_pod_rms_error_binary_1D_procs_along_col();
+    void write_pod_rms_error_binary_1D_procs_along_col_data_transposed();
 
     // postprocessing error
     void pod_rms_error_1D_procs_along_col();
@@ -213,6 +214,7 @@ class POD
     void write_mean_flow_binary_1D_procs_along_row();
     void write_pod_modes_binary_1D_procs_along_row();
     void write_pod_coefficients_binary_1D_procs_along_row();
+    void write_pod_rms_error_binary_1D_procs_along_row();
 
     // postprocessing
     void pod_rms_error_1D_procs_along_row();
