@@ -140,6 +140,6 @@ void Job::start_sparse_coding_parallel_dense_matrix_job(Context &context, MPICon
         pod.snapshots_preprocessing_1D_procs_along_col();
         sparse_coding.compute_sparse_coding_error(pod.get_truncated_snapshots());
     }
-    //sparse_coding.write_sparse_coding_output_files();
+    sparse_coding.write_sparse_coding_output_files();
     sparse_coding.cleanup_memory();
 }
