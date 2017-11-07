@@ -141,7 +141,7 @@ void POD::write_pod_output_files_1D_procs_along_col() {
         write_eigen_values_binary();
     }
 
-    if (pod_context.is_write_coefficients_and_error_to_binary_format) {
+    if (pod_context.is_write_pod_coefficients_and_error_to_binary_format) {
         write_pod_coefficients_binary_1D_procs_along_col();
         measure_time_for_function(start_time, "Writing POD coefficients done", pod_context.my_rank, pod_context.master);
 
@@ -164,7 +164,7 @@ void POD::write_pod_output_files_1D_procs_along_row() {
         write_eigen_values_binary();
     }
 
-    if (pod_context.is_write_coefficients_and_error_to_binary_format) {
+    if (pod_context.is_write_pod_coefficients_and_error_to_binary_format) {
         write_pod_coefficients_binary_1D_procs_along_row();
         measure_time_for_function(start_time, "Writing POD coefficients done", pod_context.my_rank, pod_context.master);
 

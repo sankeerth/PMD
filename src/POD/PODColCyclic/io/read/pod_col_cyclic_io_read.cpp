@@ -108,7 +108,7 @@ void POD::read_pod_modes_1D_procs_along_col() {
         str.append(patch::to_string(pod_context.index_of_snapshot_filenames[i]));
         str.append(".b");
         FILE *binfile = fopen(str.c_str(), "rb");
-        size_t num_pod_modes = fsize(str.c_str()) / 4;
+	size_t num_pod_modes = fsize(str.c_str()) / 4;
 
         // size of pod_bases has be the same as the truncated snapshots
         if (3 * pod_context.truncated_grid_points != num_pod_modes) {

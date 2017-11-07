@@ -26,11 +26,17 @@ void Parser::parse_input_file(char *input_file, Context& context) {
         file >> context.solution_prefix;
         file >> context.solution_extension;
         file >> context.path_to_output_directory;
+        file >> context.path_to_sparse_output_directory;
         file >> context.compute_pod_reconstruction_error;
         file >> context.compute_sparse_coding_reconstruction_error;
         file >> context.is_write_pod_modes_to_text_format;
         file >> context.is_write_pod_modes_to_binary_format;
-        file >> context.is_write_coefficients_and_error_to_binary_format;
+        file >> context.is_write_pod_coefficients_and_error_to_binary_format;
+        file >> context.is_write_sparse_transformation_matrix;
+        file >> context.is_write_sparse_coefficients;
+        file >> context.is_write_sparse_modes_in_original_domain;
+        file >> context.is_write_corrected_sparse_coefficients;
+        file >> context.is_write_sparse_reconstruction_error;
         file >> context.sparsity;
         file >> context.epsilon_rank;
     }

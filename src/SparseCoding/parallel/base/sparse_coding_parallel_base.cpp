@@ -66,13 +66,23 @@ void SparseCoding::generate_sparse_modes_parallel() {
         prev_error = error_global;
         iteration += 1;
 
-        LOGDR("iteration", iteration, sparse_context.my_rank, sparse_context.master);
+	 LOGDR("iteration", iteration, sparse_context.my_rank, sparse_context.master);
     }
 
     LOGD("Total iterations", iteration);
 
     deallocate(&sparse_context.sparse_modes_transpose);
     deallocate(&sparse_context.pod_coefficients_transpose);
+
+    // deallocating right after use to reduce peak mem usage
+    if(!(sparse_context.is_write_sparse_transformation_matrix | sparse_context.is_write_sparse_modes_in_original_domain | sparse_context.is_write_corrected_sparse_coefficients | sparse_context.is_write_sparse_reconstruction_error))
+        deallocate((&sparse_context.sparse_modes));
+
+    // deallocating right after use to reduce peak mem usage
+    if(!sparse_context.is_write_sparse_coefficients)
+        deallocate(&sparse_context.coefficient_matrix);
+
+
 }
 
 void SparseCoding::batch_OMP_parallel() {

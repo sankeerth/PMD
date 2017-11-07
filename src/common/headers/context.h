@@ -23,11 +23,17 @@ class Context {
     std::string solution_prefix;
     std::string solution_extension;
     std::string path_to_output_directory;
+    std::string path_to_sparse_output_directory;
     bool compute_pod_reconstruction_error;
     bool compute_sparse_coding_reconstruction_error;
     bool is_write_pod_modes_to_text_format;
     bool is_write_pod_modes_to_binary_format;
-    bool is_write_coefficients_and_error_to_binary_format;
+    bool is_write_pod_coefficients_and_error_to_binary_format;
+    bool is_write_sparse_transformation_matrix;
+    bool is_write_sparse_coefficients;
+    bool is_write_sparse_modes_in_original_domain;
+    bool is_write_corrected_sparse_coefficients;
+    bool is_write_sparse_reconstruction_error;
     float sparsity;
     float epsilon_rank;
 
@@ -55,11 +61,17 @@ class Context {
         , solution_prefix(context.solution_prefix)
         , solution_extension(context.solution_extension)
         , path_to_output_directory(context.path_to_output_directory)
+        , path_to_sparse_output_directory(context.path_to_sparse_output_directory)
         , compute_pod_reconstruction_error(context.compute_pod_reconstruction_error)
         , compute_sparse_coding_reconstruction_error(context.compute_sparse_coding_reconstruction_error)
         , is_write_pod_modes_to_text_format(context.is_write_pod_modes_to_text_format)
         , is_write_pod_modes_to_binary_format(context.is_write_pod_modes_to_binary_format)
-        , is_write_coefficients_and_error_to_binary_format(context.is_write_coefficients_and_error_to_binary_format)
+        , is_write_pod_coefficients_and_error_to_binary_format(context.is_write_pod_coefficients_and_error_to_binary_format)
+        , is_write_sparse_transformation_matrix(context.is_write_sparse_transformation_matrix)
+        , is_write_sparse_coefficients(context.is_write_sparse_coefficients)
+        , is_write_sparse_modes_in_original_domain(context.is_write_sparse_modes_in_original_domain)
+        , is_write_corrected_sparse_coefficients(context.is_write_corrected_sparse_coefficients)
+        , is_write_sparse_reconstruction_error(context.is_write_sparse_reconstruction_error)
         , sparsity(context.sparsity)
         , epsilon_rank(context.epsilon_rank)
     { }

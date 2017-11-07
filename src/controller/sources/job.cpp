@@ -132,14 +132,29 @@ void Job::start_sparse_coding_parallel_dense_matrix_job(Context &context, MPICon
     LOGR("*********** start_sparse_coding_parallel_dense_matrix_job ***********", mpi_context.my_rank, mpi_context.master);
 
     SparseCoding sparse_coding(context, mpi_context);
-    sparse_coding.sparse_coding_preprocessing();
-    sparse_coding.compute_sparse_coding();
-    if (context.compute_sparse_coding_reconstruction_error) {
-        POD pod(context, mpi_context);
-        pod.mesh_processing();
-        pod.snapshots_preprocessing_1D_procs_along_col();
-        sparse_coding.compute_sparse_coding_error(pod.get_truncated_snapshots());
+
+    if(context.is_write_sparse_transformation_matrix |context.is_write_sparse_coefficients | context.is_write_sparse_modes_in_original_domain | context.is_write_corrected_sparse_coefficients | context.is_write_sparse_reconstruction_error) {
+        sparse_coding.sparse_coding_preprocessing();
+        sparse_coding.compute_sparse_coding();
+
+        if(context.is_write_sparse_modes_in_original_domain | context.is_write_corrected_sparse_coefficients | context.is_write_sparse_reconstruction_error) {
+
+            sparse_coding.compute_sparse_modes_in_original_domain();
+
+            if(context.is_write_corrected_sparse_coefficients | context.is_write_sparse_reconstruction_error) {
+                POD pod(context, mpi_context);
+                pod.mesh_processing();
+                pod.snapshots_preprocessing_1D_procs_along_col();
+                sparse_coding.compute_corrected_sparse_coefficients(pod.get_truncated_snapshots());
+                if(context.is_write_sparse_reconstruction_error) {
+                    sparse_coding.sparse_coding_reconstruction_error(pod.get_truncated_snapshots());
+                }
+
+            }
+
+        }
+
+        sparse_coding.write_sparse_coding_output_files();
     }
-    sparse_coding.write_sparse_coding_output_files();
     sparse_coding.cleanup_memory();
 }

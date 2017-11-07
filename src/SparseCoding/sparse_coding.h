@@ -28,6 +28,7 @@ class SparseContext : public Context, public MPIContext {
 
         grid_points_in_one_dim = imax * jmax * kmax;
         truncated_grid_points = nxt * nyt * nzt;
+        truncated_grid_points_in_all_dim = dimensions * truncated_grid_points;
 
         delegate_snapshots_per_process();
         MPI_Exscan(&snapshots_per_rank, &start_snapshot_num, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
@@ -41,6 +42,8 @@ class SparseContext : public Context, public MPIContext {
     // dataset was crossing the max value of int and crashing
     unsigned long grid_points_in_one_dim;
     unsigned long truncated_grid_points;
+    int truncated_grid_points_in_all_dim;
+
 
     std::vector<int> index_of_snapshot_filenames;
     std::vector<int> index_of_snapshot_filenames_dummy;
@@ -56,6 +59,7 @@ class SparseContext : public Context, public MPIContext {
     int rows_sparse_modes_transpose_local;
     int cols_sparse_modes_transpose_local;
 
+
     float *eigen_values = NULL;
     float *pod_bases = NULL;
     float *pod_coefficients = NULL;
@@ -65,8 +69,11 @@ class SparseContext : public Context, public MPIContext {
     float *sparse_modes = NULL;
     float *coefficient_matrix = NULL;
     float *coefficient_matrix_transpose = NULL;
+    float *corrected_coefficient_matrix_transpose = NULL;
     float *updated_modes = NULL;
     float *sparse_coding_rms_error = NULL;
+    float *pod_modes_into_sparse_modes = NULL;
+    float *corrected_sparse_coeff = NULL;
 
     void delegate_snapshots_per_process() {
         int remainder = num_snapshots % num_procs;
@@ -115,6 +122,8 @@ class SparseCoding {
     void write_sparse_modes_binary();
     void write_sparse_coefficients_binary();
     void write_sparse_coding_rms_error_binary();
+    void write_sparse_modes_in_original_domain_binary();
+    void write_corrected_sparse_coefficients_binary();
 
     // preprocessing
     void initial_guess_sparse_modes();
@@ -128,7 +137,10 @@ class SparseCoding {
     void pseudo_inverse(float *A, float **pinvA, int &m, int &n, int &rows_pinvA, int &cols_pinvA);
 
     // postprocessing error
+    void compute_sparse_modes_in_original_domain();
     void sparse_coding_reconstruction_error(float *truncated_snapshots);
+    void compute_corrected_sparse_coefficients(float *truncated_snapshots);
+
 
     // postprocessing cleanup
     void cleanup_memory();
@@ -146,7 +158,10 @@ class SparseCoding {
     /* sparse coding */
     void sparse_coding_preprocessing();
     void compute_sparse_coding();
-    void compute_sparse_coding_error(float *truncated_snapshots);
+    void sparse_coding_postprocessing();
+
+
+
     void write_sparse_coding_output_files();
 
   private:
