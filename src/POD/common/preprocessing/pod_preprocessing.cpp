@@ -3,7 +3,7 @@
 #include "../../pod.h"
 
 void POD::verify_grid(int imax_check, int jmax_check, int kmax_check) {
-    LOGR("=========== verify_grid ===========", pod_context.my_rank, pod_context.master);
+    LOG("=========== verify_grid ===========");
 
     if (pod_context.imax != imax_check || pod_context.jmax != jmax_check || pod_context.kmax != kmax_check) {
         LOG("Grid size does not match the user input given in input_file");
@@ -18,8 +18,8 @@ void POD::read_mesh(bool write_pod_modes) {
     int details = 4;
     unsigned long num_records=fsize(pod_context.mesh_file.c_str()) / 4;
     size_t result;
-    int *grid_details;
-    float *record;
+    int *grid_details = NULL;
+    float *record = NULL;
 
     LOGD("num records", num_records);
     FILE* binfile = fopen(pod_context.mesh_file.c_str(),"rb") ;
@@ -55,7 +55,7 @@ void POD::read_mesh(bool write_pod_modes) {
 }
 
 void POD::compute_truncated_grid(float *record, axis ax) {
-    LOGR("=========== compute_truncated_grid ===========", pod_context.my_rank, pod_context.master);
+    LOG("=========== compute_truncated_grid ===========");
 
     switch (ax) {
     case i:
@@ -80,7 +80,7 @@ void POD::compute_truncated_grid(float *record, axis ax) {
 }
 
 void POD::make_grid_with_averaging_points(float *grid, axis ax) {
-    LOGR("=========== make_grid_with_averaging_points ===========", pod_context.my_rank, pod_context.master);
+    LOG("=========== make_grid_with_averaging_points ===========");
 
     unsigned long z_stride, y_stride, y_stride_pre, z_stride_pre;
     unsigned long x_grid_index = 0, y_grid_index = 0, z_grid_index = 0;
@@ -144,7 +144,7 @@ void POD::make_grid_with_averaging_points(float *grid, axis ax) {
 }
 
 void POD::compute_differential_of_grid(axis ax) {
-    LOGR("=========== compute_differential_of_grid ===========", pod_context.my_rank, pod_context.master);
+    LOG("=========== compute_differential_of_grid ===========");
 
     unsigned long z_stride, y_stride, y_stride_pre, z_stride_pre;
     unsigned long dxc_grid_index = 0, dyc_grid_index = 0, dzc_grid_index = 0;

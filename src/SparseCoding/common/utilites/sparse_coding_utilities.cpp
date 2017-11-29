@@ -3,7 +3,7 @@
 #include "../../sparse_coding.h"
 
 void SparseCoding::eigen_power(float *A, int rows, int cols, float eig_epsilon, float *eig_vec_l, float *eig_vec_r, float* eig_val_A) {
-    LOGR("=========== eigen_power serial ===========", sparse_context.my_rank, sparse_context.master);
+    LOG("=========== eigen_power serial ===========");
 
     double conv_eig_val = 1, conv_eig_vec = 1, eig_val = 100, eig_val_old;
     int iteration = 1, incx = 1, incy = 1;
@@ -105,7 +105,7 @@ void SparseCoding::eigen_power(float *A, int rows, int cols, float eig_epsilon, 
 }
 
 void SparseCoding::eigen_power_parallel(float *A, int rows_A_local, int cols_A_local, int rows_A_global, int cols_A_global, float eig_epsilon, float *eig_vec_l, float *eig_vec_r, float *eig_val_A, int my_rank) {
-    LOGR("=========== eigen_power_parallel ===========", sparse_context.my_rank, sparse_context.master);
+    LOG("=========== eigen_power_parallel ===========");
 
     int rows_B_local, cols_B_local, length_of_y, iteration = 1, convergence_criteria = 2;
     double conv_eig_val = 1, conv_eig_vec = 1, eig_val = 100, eig_val_old;
@@ -223,7 +223,7 @@ void SparseCoding::eigen_power_parallel(float *A, int rows_A_local, int cols_A_l
 
 // This function will not work properly for sub rank matrices where we encouter 'nan' and 'inf' values for PinvS since S will be super small and sometimes 0
 void SparseCoding::pseudo_inverse(float *A, int& m, int& n) {
-    LOGR("=========== pseudo_inverse serial ===========", sparse_context.my_rank, sparse_context.master);
+    LOG("=========== pseudo_inverse serial ===========");
 
     // SVD of A to get U, Vt and S
     int lda = m, ldu = m, ldvt = n, info, lwork;
@@ -293,7 +293,7 @@ void SparseCoding::pseudo_inverse(float *A, int& m, int& n) {
 
 // This function will not work properly for sub rank matrices where we encouter 'nan' and 'inf' values for PinvS since S will be super small and sometimes 0
 void SparseCoding::pseudo_inverse(float *A, float **pinvA, int& m, int& n, int& rows_pinvA, int& cols_pinvA) {
-    LOGR("=========== pseudo_inverse parallel ===========", sparse_context.my_rank, sparse_context.master);
+    LOG("=========== pseudo_inverse parallel ===========");
 
     // SVD of A to get U, Vt and S
     float zero = 0.0e+0, one = 1.0e+0;

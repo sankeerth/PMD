@@ -56,6 +56,8 @@ class Dimension {
 #define MAX(a,b)((a)<(b)?(b):(a))
 #define MIN(a,b)((a)>(b)?(b):(a))
 
+size_t get_memory_HWM();
+void compute_memory_readings(int num_procs, int my_rank, int rank_to_display);
 off_t fsize(const char *filename);
 void measure_time_for_function(double& start_time, std::string function_name, int& my_rank, int& master);
 int cmpfunc (const void * a, const void * b);

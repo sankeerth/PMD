@@ -5,10 +5,46 @@
 #include <stdlib.h>
 #include <math.h>
 #include <mpi.h>
+#include <sys/resource.h>
+#include <limits>
 #include "../headers/log.h"
 #include "../headers/utilities.h"
 
 using namespace std;
+
+size_t get_memory_HWM()
+{
+  struct rusage sys_resources;
+  getrusage(RUSAGE_SELF, &sys_resources);
+
+  return sys_resources.ru_maxrss;
+}
+
+void compute_memory_readings(int num_procs, int my_rank, int rank_to_display) {
+    float min_val = std::numeric_limits<float>::max();
+    float max_val = std::numeric_limits<float>::min();
+    float average = 0;
+    float memory_utilized_per_rank[num_procs];
+
+    float memory_utilized = get_memory_HWM();
+    MPI_Gather(&memory_utilized, 1, MPI_FLOAT, memory_utilized_per_rank, 1, MPI_FLOAT, rank_to_display, MPI_COMM_WORLD);
+
+    if (my_rank == rank_to_display) {
+        for (int i = 0; i < num_procs; i++) {
+            min_val = MIN(min_val, memory_utilized_per_rank[i]);
+            max_val = MAX(max_val, memory_utilized_per_rank[i]);
+            average += memory_utilized_per_rank[i];
+        }
+
+        average = average / num_procs;
+    }
+
+    LOGDR_("min memory consumed", min_val, my_rank, rank_to_display);
+    LOGDR_("max memory consumed", max_val, my_rank, rank_to_display);
+    LOGDR("mean memory consumed", average, my_rank, rank_to_display);
+
+    MPI_Barrier(MPI_COMM_WORLD);
+}
 
 /**
     Returns the size of the file in bytes
@@ -78,23 +114,29 @@ void create_directory(string path) {
 }
 
 void allocate(int **array, int size) {
-    *array = (int*) malloc (size * sizeof(int));
-    if (!(*array)) {
-        cout << "FAILED TO ALLOCATE MEMORY" << endl;
+    if (!(*array) && *array == NULL) {
+        *array = (int*) malloc (size * sizeof(int));
+        if (!(*array)) {
+            cout << "FAILED TO ALLOCATE MEMORY" << endl;
+        }
     }
 }
 
 void allocate(float **array, int size) {
-    *array = (float*) malloc (size * sizeof(float));
-    if (!(*array)) {
-        cout << "FAILED TO ALLOCATE MEMORY" << endl;
+    if (!(*array) && *array == NULL) {
+        *array = (float*) malloc (size * sizeof(float));
+        if (!(*array)) {
+            cout << "FAILED TO ALLOCATE MEMORY" << endl;
+        }
     }
 }
 
 void allocate(double **array, int size) {
-    *array = (double*) malloc (size * sizeof(double));
-    if (!(*array)) {
-        cout << "FAILED TO ALLOCATE MEMORY" << endl;
+    if (!(*array) && *array == NULL) {
+        *array = (double*) malloc (size * sizeof(double));
+        if (!(*array)) {
+            cout << "FAILED TO ALLOCATE MEMORY" << endl;
+        }
     }
 }
 

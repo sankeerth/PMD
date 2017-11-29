@@ -267,7 +267,7 @@ void singular_value_decomposition(float *A, char jobu, char jobvt, int m, int n,
     MKL_INT iam, nprocs, ictxt, myrow, mycol;
     MKL_INT info, lld_A, lld_U, lld_Vt;
 
-    float *work;
+    float *work = NULL;
     float workpt;
     MKL_INT lwork = -1;
 

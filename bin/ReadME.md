@@ -52,7 +52,7 @@ It is recommended to use this option with PODParallelColCyclic for better usage 
 23. A boolean to represent if Sparse Transformation matrix have to be written in binary format. '0' if not to be written. '1' if it has to be written.
 24. A boolean to represent if Sparse Coefficients have to be written in binary format. '0' if not to be written. '1' if it has to be written.
 25. A boolean to represent if Sparse Modes in original domain have to be written in binary format. '0' if not to be written. '1' if it has to be written.
-26. A boolean to represent if Corrected Coefficients have to be written in binary format. '0' if not to be written. '1' if it has to be written.
+26. A boolean to represent if Corrected Sparse Coefficients have to be written in binary format. '0' if not to be written. '1' if it has to be written.
 27. A boolean to represent if Sparse Reconstruction Error have to be written in binary format. '0' if not to be written. '1' if it has to be written.
 
 ==== Config Info ====

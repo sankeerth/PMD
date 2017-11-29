@@ -10,6 +10,7 @@ void SparseCoding::generate_sparse_modes_parallel() {
     int rows_pod_coefficients_tranpose_local, cols_pod_coefficients_tranpose_local, iteration = 0, rows_errors_local, cols_errors_local;
     float epsilon_val = 1e10, error_local, error_global, prev_error;
     float *errors = NULL;
+    double start_time_convergence_loop;
 
     matrix_transpose(sparse_context.pod_coefficients, sparse_context.rank_eigen_values, sparse_context.num_snapshots, &sparse_context.pod_coefficients_transpose, rows_pod_coefficients_tranpose_local,\
                      cols_pod_coefficients_tranpose_local, 1, sparse_context.num_procs, 1, 1, 1, 1);
@@ -20,6 +21,7 @@ void SparseCoding::generate_sparse_modes_parallel() {
     allocate(&sparse_context.coefficient_matrix, sparse_context.num_modes * sparse_context.snapshots_per_rank);
 
     while (epsilon_val > sparse_context.epsilon && iteration < sparse_context.max_iterations) {
+        start_time_convergence_loop = MPI_Wtime();
 
         matrix_transpose(sparse_context.sparse_modes, sparse_context.rank_eigen_values, sparse_context.num_modes, &sparse_context.sparse_modes_transpose, sparse_context.rows_sparse_modes_transpose_local,\
                          sparse_context.cols_sparse_modes_transpose_local, 1, sparse_context.num_procs, sparse_context.rank_eigen_values, 1, sparse_context.num_modes, 1);
@@ -28,11 +30,16 @@ void SparseCoding::generate_sparse_modes_parallel() {
         display(sparse_context.sparse_modes_transpose, sparse_context.rows_sparse_modes_transpose_local * sparse_context.cols_sparse_modes_transpose_local);
 
         batch_OMP_parallel();
-        MPI_Barrier(MPI_COMM_WORLD);
+        measure_time_for_function(start_time_convergence_loop, "Batch OMP parallel done", sparse_context.my_rank, sparse_context.master);
+        compute_memory_readings(sparse_context.num_procs, sparse_context.my_rank, sparse_context.master);
+
         KSVD_parallel();
-        MPI_Barrier(MPI_COMM_WORLD);
+        measure_time_for_function(start_time_convergence_loop, "KSVD parallel done", sparse_context.my_rank, sparse_context.master);
+        compute_memory_readings(sparse_context.num_procs, sparse_context.my_rank, sparse_context.master);
+
         I_clear_dictionary_parallel();
-        MPI_Barrier(MPI_COMM_WORLD);
+        measure_time_for_function(start_time_convergence_loop, "I clear dictionary done", sparse_context.my_rank, sparse_context.master);
+        compute_memory_readings(sparse_context.num_procs, sparse_context.my_rank, sparse_context.master);
 
         LOGR("=============== sparse_modes ============================", sparse_context.my_rank, sparse_context.master);
         display(sparse_context.sparse_modes, sparse_context.rank_eigen_values * sparse_context.num_modes_in_my_rank);
@@ -67,6 +74,9 @@ void SparseCoding::generate_sparse_modes_parallel() {
         iteration += 1;
 
 	 LOGDR("iteration", iteration, sparse_context.my_rank, sparse_context.master);
+     measure_time_for_function(start_time, "Time after current iteration", sparse_context.my_rank, sparse_context.master);
+     LOGR("******************************************************************************************************", sparse_context.my_rank, sparse_context.master);
+
     }
 
     LOGD("Total iterations", iteration);
@@ -75,7 +85,7 @@ void SparseCoding::generate_sparse_modes_parallel() {
     deallocate(&sparse_context.pod_coefficients_transpose);
 
     // deallocating right after use to reduce peak mem usage
-    if(!(sparse_context.is_write_sparse_transformation_matrix | sparse_context.is_write_sparse_modes_in_original_domain | sparse_context.is_write_corrected_sparse_coefficients | sparse_context.is_write_sparse_reconstruction_error))
+    if(!(sparse_context.is_write_sparse_transformation_matrix || sparse_context.is_write_sparse_modes_in_original_domain || sparse_context.is_write_corrected_sparse_coefficients || sparse_context.is_write_sparse_reconstruction_error))
         deallocate((&sparse_context.sparse_modes));
 
     // deallocating right after use to reduce peak mem usage
@@ -86,7 +96,7 @@ void SparseCoding::generate_sparse_modes_parallel() {
 }
 
 void SparseCoding::batch_OMP_parallel() {
-    LOGR("=========== batch_OMP_parallel ===========", sparse_context.my_rank, sparse_context.master);
+    LOG("=========== batch_OMP_parallel ===========");
 
     float alpha = 1.0, beta = 0.0, max;
     float *G_local = NULL, *G = NULL, *G_temp_buffer = NULL, *x = NULL, *D_prod_x = NULL, *y = NULL, *y_dup = NULL, *y_ = NULL, *PinvG = NULL;
@@ -310,7 +320,7 @@ void SparseCoding::batch_OMP_parallel() {
 }
 
 void SparseCoding::KSVD_parallel() {
-    LOGR("=========== KSVD_parallel ===========", sparse_context.my_rank, sparse_context.master);
+    LOG("=========== KSVD_parallel ===========");
 
     int rows_coefficient_matrix_tranpose_local, cols_coefficient_matrix_tranpose_local;
     allocate(&sparse_context.updated_modes, sparse_context.rank_eigen_values);
@@ -358,7 +368,7 @@ void SparseCoding::KSVD_parallel() {
 }
 
 void SparseCoding::update_modes_KSVD_parallel(int &col) {
-    LOGR("=========== update_modes_KSVD_parallel ===========", sparse_context.my_rank, sparse_context.master);
+    LOG("=========== update_modes_KSVD_parallel ===========");
 
     float singular_value = 0, *beta_vector = NULL, *coefficient_matrix_relevant_indices = NULL, *errors = NULL;
     int *relevant_data_indices = NULL;
@@ -450,7 +460,7 @@ void SparseCoding::update_modes_KSVD_parallel(int &col) {
 }
 
 void SparseCoding::replace_non_active_mode_parallel(int col, int &pos) {
-    LOGR("=========== replace_non_active_mode_parallel ===========", sparse_context.my_rank, sparse_context.master);
+    LOG("=========== replace_non_active_mode_parallel ===========");
 
     float *error_norm_vec = NULL, *errors = NULL, *max_error_norm_vec = NULL, max, max_proc_pos, norm_updated_modes;
     int rows_errors_local, cols_errors_local;
@@ -522,7 +532,7 @@ void SparseCoding::replace_non_active_mode_parallel(int col, int &pos) {
 }
 
 void SparseCoding::I_clear_dictionary_parallel() {
-    LOGR("=========== I_clear_dictionary_parallel ===========", sparse_context.my_rank, sparse_context.master);
+    LOG("=========== I_clear_dictionary_parallel ===========");
 
     float T2 = 0.99, T1 = 3.0;
     float *error_norm_vec = NULL, *error_norm_vec_transpose = NULL, *errors = NULL, *G = NULL, *replacement_vector = NULL, *condition = NULL, *cleaned_up_sparse_modes = NULL;

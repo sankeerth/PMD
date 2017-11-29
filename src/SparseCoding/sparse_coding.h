@@ -120,7 +120,10 @@ class SparseCoding {
 
     // io write
     void write_sparse_modes_binary();
-    void write_sparse_coefficients_binary();
+    //parallel
+    void write_sparse_coefficients_binary_parallel();
+    //serial
+    void write_sparse_coefficients_binary_serial();
     void write_sparse_coding_rms_error_binary();
     void write_sparse_modes_in_original_domain_binary();
     void write_corrected_sparse_coefficients_binary();
@@ -155,15 +158,33 @@ class SparseCoding {
     void replace_non_active_mode_parallel(int col, int &pos);
     void I_clear_dictionary_parallel();
 
+    /* Serial */
+
+    //base
+    void generate_sparse_modes_serial();
+    void batch_OMP_serial();
+    void KSVD_serial();
+    void update_modes_KSVD_serial(int& row);
+    void replace_non_active_mode_serial(int row, int &pos);
+    void I_clear_dictionary_serial();
+
     /* sparse coding */
     void sparse_coding_preprocessing();
-    void compute_sparse_coding();
+    //parallel
+    void compute_sparse_coding_parallel();
+    //serial
+    void compute_sparse_coding_serial();
+
     void sparse_coding_postprocessing();
 
 
+    //parallel
+    void write_sparse_coding_output_files_parallel();
 
-    void write_sparse_coding_output_files();
+    //serial
+    void write_sparse_coding_output_files_serial();
 
+    double start_time;
   private:
     SparseContext sparse_context;
 };
