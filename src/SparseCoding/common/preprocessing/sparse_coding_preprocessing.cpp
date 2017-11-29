@@ -57,7 +57,7 @@ void SparseCoding::initialize_eplison_convergence_value() {
 
     MPI_Allreduce(&epsilon, &sparse_context.epsilon, 1, MPI_FLOAT, MPI_SUM, MPI_COMM_WORLD);
 
-    sparse_context.epsilon = 1e-4 * sqrt(sparse_context.epsilon);
+    sparse_context.epsilon = sparse_context.convergence_criteria * sqrt(sparse_context.epsilon);
 
     LOGDR("sparse_context.epsilon", sparse_context.epsilon, sparse_context.my_rank, sparse_context.master);
 }

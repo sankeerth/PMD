@@ -36,6 +36,7 @@ class Context {
     bool is_write_sparse_reconstruction_error;
     float sparsity;
     float epsilon_rank;
+    float convergence_criteria;
 
     Context(const Context& context)
         : task(context.task)
@@ -74,6 +75,7 @@ class Context {
         , is_write_sparse_reconstruction_error(context.is_write_sparse_reconstruction_error)
         , sparsity(context.sparsity)
         , epsilon_rank(context.epsilon_rank)
+        , convergence_criteria(context.convergence_criteria)
     { }
 
     Context() { }

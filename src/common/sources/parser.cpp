@@ -39,6 +39,7 @@ void Parser::parse_input_file(char *input_file, Context& context) {
         file >> context.is_write_sparse_reconstruction_error;
         file >> context.sparsity;
         file >> context.epsilon_rank;
+        file >> context.convergence_criteria;
     }
 
     file.close();
