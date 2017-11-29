@@ -38,17 +38,24 @@ It is recommended to use this option with PODParallelColCyclic for better usage 
 13. Path to snapshot files directory (append a '/' at the end as I do not in the code)
 14. Prefix of the snapshot files, for ex: 'Sol3C'
 15. Extension of the solution/snapshot files, for ex: '.q'. If extension not required, then just put '0' in that line
-16. Path to output directory (Eigen values, POD bases and POD coefficients will be written here. Create this directory and append a '/' at the end as well)
+16. Path to POD output directory (Eigen values, POD bases and POD coefficients will be written here. Create this directory and append a '/' at the end as well). While doing sparse coding, this would be the input folder where POD coefficients and modes will be present.
+17. Path to sparse output directory (All the sparse outputs requested will be written here).(Create this directory and append a '/' at the end as well).
 
 ==== Reconstuction Error Info ====
-17. '1' to compute POD reconstruction error and '0' otherwise
-18. '1' to compute Sparse Coding reconstruction error and '0' otherwise
+18. '1' to compute POD reconstruction error and '0' otherwise
+19. '1' to compute Sparse Coding reconstruction error and '0' otherwise
 
 ==== Output Info ====
-19. A boolean to represent if POD modes have to be written to in text format. '0' if not to be written. '1' if it has to be written.
-20. A boolean to represent if POD modes have to be written to in binary format. '0' if not to be written. '1' if it has to be written.
-21. A boolean to represent if POD modes and RMS error have to be written to in binary format. '0' if not to be written. '1' if it has to be written.
+20. A boolean to represent if POD modes have to be written to in text format. '0' if not to be written. '1' if it has to be written.
+21. A boolean to represent if POD modes have to be written to in binary format. '0' if not to be written. '1' if it has to be written.
+22. A boolean to represent if POD modes and RMS error have to be written to in binary format. '0' if not to be written. '1' if it has to be written.
+23. A boolean to represent if Sparse Transformation matrix have to be written in binary format. '0' if not to be written. '1' if it has to be written.
+24. A boolean to represent if Sparse Coefficients have to be written in binary format. '0' if not to be written. '1' if it has to be written.
+25. A boolean to represent if Sparse Modes in original domain have to be written in binary format. '0' if not to be written. '1' if it has to be written.
+26. A boolean to represent if Corrected Coefficients have to be written in binary format. '0' if not to be written. '1' if it has to be written.
+27. A boolean to represent if Sparse Reconstruction Error have to be written in binary format. '0' if not to be written. '1' if it has to be written.
 
 ==== Config Info ====
-22. sparsity used in Sparse Coding
-23. Epsilon rank: This represents the value where all the snapshots between the largest and smallest value whose difference is less than the epsilon value are included in the rank.
+28. sparsity used in Sparse Coding
+29. Epsilon rank: This represents the value where all the snapshots between the largest and smallest value whose difference is less than the epsilon value are included in the rank.
+30. Convergence criteria for sparse coding.
